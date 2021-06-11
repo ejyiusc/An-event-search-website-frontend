@@ -4,22 +4,70 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
 
   <body>
-    <div class="container">
-      <p>Search icon on a button:
-        <button type="button" class="btn btn-primary btn-sm">
+    <div style="background-color: rgb(218, 218, 218);">
+      <p>Entertainment Event Ticket Search</p>
+      <div>
+        <p ng-model="text1" style="display: inline;">Keyword<span style="color:red;">* </span></p>
+        <input type="text" class="form-control" [(ngModel)]="formInfo.keyword" placeholder="Enter Artist, Team or Event Name (eg. Lakers)" style="display: inline; width: 300px">
+      </div>
+      <br>
+
+      <div ngbDropdown style="display: inline;">
+        <p style="display: inline;">Category</p>
+        <select name="" id="if02" data-first-option="true" [(ngModel)]="formInfo.category">
+      　　<option value="" class="">All</option>
+          <option value="Music">Music</option>
+          <option value="Sports">Sports</option>
+          <option value="ArtsTheatre">Arts & Theatre</option>
+          <option value="Films">Films</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+      </div>
+      <br>
+
+      <div ngbDropdown style="display: inline;">
+        <p style="display: inline;">Distance</p>
+        <input type="text" class="form-control" placeholder="10" style="display: inline; width: 50px">
+        <button class="btn btn-outline-default" id="dropdownBasic1" ngbDropdownToggle>Miles</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem>Miles</button>
+          <button ngbDropdownItem>Kilometers</button>
+        </div>     
+      </div>
+      <br>
+
+      <div>
+        <p style="display: inline;">From<span style="color:red;">* </span></p>
+        <div style="display: inline;">
+        <label class="radio-inline">
+          <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="option1" checked> Current location
+        </label>
+        <br>
+        <label class="radio-inline">
+          <input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="option2"> Other. Please specify
+        </label>
+        <input type="text" class="form-control" style="display: inline; width: 300px">
+      </div>
+    </div>
+      
+      <div>
+        <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()">
           <span class="glyphicon glyphicon-search"></span> Search
         </button>
         <button type="button" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-search"></span> Clear
         </button>
-      </p>
+      </div>
     </div>
-
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
   </body>
 
 </html>
+<script>
+  console.log("hellooooo")
+</script>

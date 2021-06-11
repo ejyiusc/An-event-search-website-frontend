@@ -6,10 +6,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
+  public formInfo: any = {
+    keyword: '',
+    category: ''
+  }
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  getChange(val: string) {
+    console.log(val);
+    this.formInfo.category = val;
+    　　
+  }
+  doSubmit() {
+    console.log(this.formInfo);
   }
 
 }
