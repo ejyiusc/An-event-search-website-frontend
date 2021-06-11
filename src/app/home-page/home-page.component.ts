@@ -8,18 +8,33 @@ import { Component, OnInit } from '@angular/core';
 export class HomePageComponent implements OnInit {
   public formInfo: any = {
     keyword: '',
-    category: ''
+    category: '',
+    distance: '',
+    distanceUnit: '',
+    from: '',
+    fromLocation: '',
+
   }
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.formInfo.from = 'Here' // Set the default choice of 'from' is "Here".
   }
 
   getChange(val: string) {
     console.log(val);
     this.formInfo.category = val;
     　　
+  }
+  clearForm(){
+    this.formInfo.keyword = ''
+    this.formInfo.category = ''
+    this.formInfo.distance = ''
+    this.formInfo.distanceUnit = ''
+    this.formInfo.from = 'Here'
+    this.formInfo.fromLocation = ''
+    console.log("clear finished")
   }
   doSubmit() {
     console.log(this.formInfo);

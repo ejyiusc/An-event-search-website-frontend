@@ -19,7 +19,7 @@
 
       <div ngbDropdown style="display: inline;">
         <p style="display: inline;">Category</p>
-        <select name="" id="if02" data-first-option="true" [(ngModel)]="formInfo.category">
+        <select name="" id="category" data-first-option="true" [(ngModel)]="formInfo.category">
       　　<option value="" class="">All</option>
           <option value="Music">Music</option>
           <option value="Sports">Sports</option>
@@ -32,12 +32,11 @@
 
       <div ngbDropdown style="display: inline;">
         <p style="display: inline;">Distance</p>
-        <input type="text" class="form-control" placeholder="10" style="display: inline; width: 50px">
-        <button class="btn btn-outline-default" id="dropdownBasic1" ngbDropdownToggle>Miles</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button ngbDropdownItem>Miles</button>
-          <button ngbDropdownItem>Kilometers</button>
-        </div>     
+        <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
+        <select id="category" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
+      　　<option value="">Miles</option>
+          <option value="Kilometers">Kilometers</option>
+        </select>   
       </div>
       <br>
 
@@ -45,13 +44,14 @@
         <p style="display: inline;">From<span style="color:red;">* </span></p>
         <div style="display: inline;">
         <label class="radio-inline">
-          <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="option1" checked> Current location
+          <input type="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
         </label>
         <br>
         <label class="radio-inline">
-          <input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="option2"> Other. Please specify
+          <input type="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
         </label>
-        <input type="text" class="form-control" style="display: inline; width: 300px">
+        <br>
+        <input type="text" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
       </div>
     </div>
       
@@ -59,7 +59,7 @@
         <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()">
           <span class="glyphicon glyphicon-search"></span> Search
         </button>
-        <button type="button" class="btn btn-default btn-sm">
+        <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
           <span class="glyphicon glyphicon-search"></span> Clear
         </button>
       </div>
