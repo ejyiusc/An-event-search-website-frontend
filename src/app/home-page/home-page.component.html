@@ -9,62 +9,99 @@
   </head>
 
   <body>
-    <div style="background-color: rgb(218, 218, 218);">
-      <p>Entertainment Event Ticket Search</p>
-      <div>
-        <p ng-model="text1" style="display: inline;">Keyword<span style="color:red;">* </span></p>
-        <input type="text" class="form-control" [(ngModel)]="formInfo.keyword" placeholder="Enter Artist, Team or Event Name (eg. Lakers)" style="display: inline; width: 300px">
-      </div>
-      <br>
+      <div style="background-color: rgb(218, 218, 218);">
+        <p>Entertainment Event Ticket Search</p>
+        <div>
+          <p style="display: inline;">Keyword<span style="color:red;">* </span></p>
+          <form class="example-form">
+            <!-- Initial display part -->
+            <input type="text"
+              *ngIf="keywordInvalid == false"
+              placeholder="Enter Artist, Team or Event Name (eg. Lakers)"
+              aria-label="Number"
+              matInput
+              [(ngModel)]="formInfo.keyword"
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
+              style="display: inline; width: 300px">
 
-      <div ngbDropdown style="display: inline;">
-        <p style="display: inline;">Category</p>
-        <select name="" id="category" data-first-option="true" [(ngModel)]="formInfo.category">
-      　　<option value="" class="">All</option>
-          <option value="Music">Music</option>
-          <option value="Sports">Sports</option>
-          <option value="ArtsTheatre">Arts & Theatre</option>
-          <option value="Films">Films</option>
-          <option value="Miscellaneous">Miscellaneous</option>
-        </select>
-      </div>
-      <br>
+              <!-- When input keyword is invalid, display this part -->
+              <input type="text"
+              *ngIf="keywordInvalid == true"
+              placeholder="Enter Artist, Team or Event Name (eg. Lakers)"
+              aria-label="Number"
+              matInput
+              [(ngModel)]="formInfo.keyword"
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
+              style="display: inline; width: 300px; border: 3px solid red;">
 
-      <div ngbDropdown style="display: inline;">
-        <p style="display: inline;">Distance</p>
-        <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
-        <select id="category" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
-      　　<option value="">Miles</option>
-          <option value="Kilometers">Kilometers</option>
-        </select>   
-      </div>
-      <br>
+              <!-- Error message -->
+              <div *ngIf="keywordInvalid == true" style="color: red;">Please enter a keyword</div>
 
-      <div>
-        <p style="display: inline;">From<span style="color:red;">* </span></p>
-        <div style="display: inline;">
-        <label class="radio-inline">
-          <input type="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
-        </label>
+              <!-- Autocomplete -->
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of options" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+          </form>
+        </div>
         <br>
-        <label class="radio-inline">
-          <input type="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
-        </label>
+
+        <div ngbDropdown style="display: inline;">
+          <p style="display: inline;">Category</p>
+          <select name="" id="category" data-first-option="true" [(ngModel)]="formInfo.category">
+        　　<option value="" class="">All</option>
+            <option value="Music">Music</option>
+            <option value="Sports">Sports</option>
+            <option value="ArtsTheatre">Arts & Theatre</option>
+            <option value="Films">Films</option>
+            <option value="Miscellaneous">Miscellaneous</option>
+          </select>
+        </div>
         <br>
-        <input type="text" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
+
+        <div ngbDropdown style="display: inline;">
+          <p style="display: inline;">Distance</p>
+          <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
+          <select id="category" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
+        　　<option value="">Miles</option>
+            <option value="Kilometers">Kilometers</option>
+          </select>   
+        </div>
+        <br>
+
+        <div>
+          <p style="display: inline;">From<span style="color:red;">* </span></p>
+          <div style="display: inline;">
+          <label class="radio-inline">
+            <input type="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
+          </label>
+          <br>
+          <label class="radio-inline">
+            <input type="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
+          </label>
+          <br>
+          <input type="text" *ngIf="locationInvalid == false" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
+          <input type="text" *ngIf="locationInvalid == true" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px; border: 3px solid red;">
+          <div *ngIf="locationInvalid == true" style="color: red;">Please enter a location</div>
+        </div>
       </div>
-    </div>
-      
-      <div>
-        <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()">
-          <span class="glyphicon glyphicon-search"></span> Search
-        </button>
-        <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
-          <span class="glyphicon glyphicon-search"></span> Clear
-        </button>
+        
+        <div>
+          <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()" disabled>
+            <span class="glyphicon glyphicon-search"></span> Search
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()">
+            <span class="glyphicon glyphicon-search"></span> Search
+          </button>
+          <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
+            <span class="glyphicon glyphicon-search"></span> Clear
+          </button>
+        </div>
       </div>
-    </div>
- 
+
   </body>
 
 </html>
