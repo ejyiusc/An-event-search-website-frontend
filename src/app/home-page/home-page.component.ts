@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-// import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'home-page',
@@ -23,11 +22,12 @@ export class HomePageComponent implements OnInit {
   public keywordInvalid:boolean = false
   public locationInvalid:boolean = false
 
-  options: string[] = ['One', 'Two', 'Three'];
-  myControl = new FormControl();
+  // Keyword auto-complete
+  options: string[] = ['One', 'Two', 'Three', 'five'];  // keyword auto-complete content
+  keywordControl = new FormControl();
 
   ngOnInit() {
-    this.formInfo.from = 'Here';// Set the default choice of 'from' is "Here".
+    this.formInfo.from = 'Here';  // Set the default choice of 'from' is "Here".
     var geo_url = "https://ipinfo.io/?token=c4eba8a0a82929";
     this.http.get(geo_url).subscribe(response =>
       {
@@ -40,6 +40,10 @@ export class HomePageComponent implements OnInit {
     console.log(val);
     this.formInfo.category = val;
     　　
+  }
+  change(){
+    console.log("change")
+    this.locationInvalid = true
   }
   clearForm(){
     this.formInfo.keyword = ''
@@ -54,9 +58,11 @@ export class HomePageComponent implements OnInit {
     console.log("clear finished")
   }
   doSubmit() {
+    this.formInfo.keyword = this.keywordControl.value;
+    console.log(this.formInfo.keyword)
 
     // Invalid keyword input
-    if(this.formInfo.keyword == ''){
+    if(this.formInfo.keyword == null){
       this.keywordInvalid = true;
     }
 
