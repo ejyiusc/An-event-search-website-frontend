@@ -22,18 +22,29 @@ export class HomePageComponent implements OnInit {
   public keywordInvalid:boolean = false
   public locationInvalid:boolean = false
 
+  public getCurrentLocation = false
+  public currentLatitude:String = ''
+  public currentLongitude:String = ''
+
   // Keyword auto-complete
   options: string[] = ['One', 'Two', 'Three', 'five'];  // keyword auto-complete content
   keywordControl = new FormControl();
 
   ngOnInit() {
     this.formInfo.from = 'Here';  // Set the default choice of 'from' is "Here".
-    var geo_url = "https://ipinfo.io/?token=c4eba8a0a82929";
-    this.http.get(geo_url).subscribe(response =>
-      {
-        console.log(response);
-      });
 
+    // Get current location
+    var geoUrl = "https://ipinfo.io/?token=c4eba8a0a82929";
+    fetch(geoUrl)
+      .then(resGeoData => resGeoData.json())
+      .then(resGeoData => {
+        var location = resGeoData.loc;
+        this.currentLatitude = location.substring(0, location.indexOf(','))
+        this.currentLongitude = location.substring(location.indexOf(',') + 1, location.length)
+        if(this.currentLatitude != '' && this.currentLongitude != ''){
+          this.getCurrentLocation = true;
+        }
+      })
   }
 
   getChange(val: string) {
@@ -41,10 +52,7 @@ export class HomePageComponent implements OnInit {
     this.formInfo.category = val;
     　　
   }
-  change(){
-    console.log("change")
-    this.locationInvalid = true
-  }
+
   clearForm(){
     this.formInfo.keyword = ''
     this.formInfo.category = ''

@@ -78,7 +78,7 @@
           </label>
           <br>
           <label class="radio-inline">
-            <input type="radio" name="optionsRadiosinline" id="optionsRadios4" ng-change="change()" ng-checked="change()" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
+            <input type="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
           </label>
           <br>
           <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px" disabled>
@@ -89,10 +89,10 @@
       </div>
         
         <div>
-          <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()" disabled>
+          <button type="button" *ngIf="getCurrentLocation == false" class="btn btn-primary btn-sm" (click)="doSubmit()" disabled>
             <span class="glyphicon glyphicon-search"></span> Search
           </button>
-          <button type="button" class="btn btn-primary btn-sm" (click)="doSubmit()">
+          <button type="button" *ngIf="getCurrentLocation == true" class="btn btn-primary btn-sm" (click)="doSubmit()">
             <span class="glyphicon glyphicon-search"></span> Search
           </button>
           <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
