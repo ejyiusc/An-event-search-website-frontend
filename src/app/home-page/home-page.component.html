@@ -15,7 +15,7 @@
           <p style="display: inline;">Keyword<span style="color:red;">* </span></p>
           <form class="example-form" style="display: inline;">
             <!-- Initial display part -->
-            <input type="text"
+            <input type="text" class="form-control"
               *ngIf="keywordInvalid == false"
               placeholder="Enter Artist, Team or Event Name (eg. Lakers)"
               aria-label="Number"
@@ -49,7 +49,7 @@
 
         <div ngbDropdown style="display: inline;">
           <p style="display: inline;">Category</p>
-          <select name="" id="category" data-first-option="true" [(ngModel)]="formInfo.category">
+          <select name="" id="category" class="form-control" style="width: 150px; display: inline;" data-first-option="true" [(ngModel)]="formInfo.category">
         　　<option value="" class="">All</option>
             <option value="Music">Music</option>
             <option value="Sports">Sports</option>
@@ -63,7 +63,7 @@
         <div ngbDropdown style="display: inline;">
           <p style="display: inline;">Distance</p>
           <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
-          <select id="category" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
+          <select id="category" class="form-control" style="width: 100px; display: inline;" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
         　　<option value="">Miles</option>
             <option value="Kilometers">Kilometers</option>
           </select>   
@@ -74,16 +74,16 @@
           <p style="display: inline;">From<span style="color:red;">* </span></p>
           <div style="display: inline;">
           <label class="radio-inline">
-            <input type="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
+            <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
           </label>
           <br>
           <label class="radio-inline">
-            <input type="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
+            <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
           </label>
           <br>
-          <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px" disabled>
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control needs-validation" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px; border: 3px solid red;">
+          <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px" disabled>
+          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
+          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px; border: 3px solid red;">
           <div *ngIf="locationInvalid == true" style="color: red;">Please enter a location</div>
         </div>
       </div>

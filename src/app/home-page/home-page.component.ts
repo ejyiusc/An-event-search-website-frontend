@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 export class HomePageComponent implements OnInit {
   
   constructor(public http: HttpClient) { }
-  
+  //////// Data
   public formInfo: any = {
     keyword: '',
     category: '',
@@ -27,10 +27,13 @@ export class HomePageComponent implements OnInit {
   public getCurrentLocation = false
   public currentLatitude:String = ''
   public currentLongitude:String = ''
+  public latitude:String
 
   // Keyword auto-complete
   options: string[] = ['One', 'Two', 'Three', 'five'];  // keyword auto-complete content
   keywordControl = new FormControl();
+
+  ////////////////
 
   ngOnInit() {
     this.formInfo.from = 'Here';  // Set the default choice of 'from' is "Here".
@@ -43,12 +46,16 @@ export class HomePageComponent implements OnInit {
         var location = resGeoData.loc;
         this.currentLatitude = location.substring(0, location.indexOf(','))
         this.currentLongitude = location.substring(location.indexOf(',') + 1, location.length)
-        this.formInfo.latitude = this.currentLatitude
-        this.formInfo.longitude = this.currentLongitude
         if(this.currentLatitude != '' && this.currentLongitude != ''){
           this.getCurrentLocation = true;
         }
       })
+    
+    // When inputed keyword changes, request backend to auto-complete
+    this.keywordControl.valueChanges.subscribe(realTimeKeyword => {
+      console.log('realTimeKeyword: ', realTimeKeyword)
+      this.requestBackendToAutoComplete(realTimeKeyword)
+    })
   }
 
   getChange(val: string) {
@@ -58,7 +65,7 @@ export class HomePageComponent implements OnInit {
   }
 
   clearForm(){
-    this.formInfo.keyword = ''
+    this.keywordControl = new FormControl();
     this.formInfo.category = ''
     this.formInfo.distance = ''
     this.formInfo.distanceUnit = ''
@@ -93,19 +100,29 @@ export class HomePageComponent implements OnInit {
           .then(resGeoData => resGeoData.json())
           .then(resGeoData => {
             console.log("google map location: ", resGeoData)
-            this.formInfo.latitude = resGeoData["results"][0]["geometry"]["location"]["lat"]
-            this.formInfo.longitude = resGeoData["results"][0]["geometry"]["location"]["lng"]
+            var latitude = resGeoData["results"][0]["geometry"]["location"]["lat"]
+            var longitude = resGeoData["results"][0]["geometry"]["location"]["lng"]
             console.log("form info: (other location)", this.formInfo)
-            this.requestBackend()
+            this.requestBackendToSearch(latitude, longitude)
           })
       }
     }
     else{
-      this.requestBackend()
+      this.requestBackendToSearch(this.currentLatitude, this.currentLongitude)
     }
   }
 
-  requestBackend(){
+  requestBackendToAutoComplete(keyword:String){
+    var backendUrl = "http://127.0.0.1:8080/autocomplete?"
+    backendUrl += "keyword=" + keyword
+    console.log("Auto-complete backendUrl:", backendUrl)
+    this.http.get(backendUrl).subscribe(response =>
+      {
+        console.log(response);
+      });
+  }
+
+  requestBackendToSearch(latitude:String, longitude:String){
     var backendUrl = "http://127.0.0.1:8080/?"
     backendUrl += "keyword=" + this.formInfo.keyword
     backendUrl += "&category=" + this.formInfo.category
@@ -113,9 +130,9 @@ export class HomePageComponent implements OnInit {
     backendUrl += "&distanceUnit=" + this.formInfo.distanceUnit
     backendUrl += "&from=" + this.formInfo.from
     backendUrl += "&fromLocation=" + this.formInfo.fromLocation
-    backendUrl += "&latitude=" + this.formInfo.latitude
-    backendUrl += "&longitude=" + this.formInfo.longitude
-    console.log("form info:", this.formInfo)
+    backendUrl += "&latitude=" + latitude
+    backendUrl += "&longitude=" + longitude
+    console.log("backendUrl:", backendUrl)
     this.http.get(backendUrl).subscribe(response =>
       {
         console.log(response);
