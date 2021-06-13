@@ -18,6 +18,8 @@ export class HomePageComponent implements OnInit {
     distanceUnit: '',
     from: '',
     fromLocation: '',
+    latitude: '',
+    longitude: '',
   }
   public keywordInvalid:boolean = false
   public locationInvalid:boolean = false
@@ -41,6 +43,8 @@ export class HomePageComponent implements OnInit {
         var location = resGeoData.loc;
         this.currentLatitude = location.substring(0, location.indexOf(','))
         this.currentLongitude = location.substring(location.indexOf(',') + 1, location.length)
+        this.formInfo.latitude = this.currentLatitude
+        this.formInfo.longitude = this.currentLongitude
         if(this.currentLatitude != '' && this.currentLongitude != ''){
           this.getCurrentLocation = true;
         }
@@ -65,33 +69,56 @@ export class HomePageComponent implements OnInit {
     this.locationInvalid = false
     console.log("clear finished")
   }
+
   doSubmit() {
     this.formInfo.keyword = this.keywordControl.value;
-    console.log(this.formInfo.keyword)
 
     // Invalid keyword input
     if(this.formInfo.keyword == null){
       this.keywordInvalid = true;
+      return
     }
 
-    // Invalid location input when choose other
-    if(this.formInfo.from == 'Other' && this.formInfo.fromLocation == ''){
-      this.locationInvalid = true;
+    if(this.formInfo.from == 'Other'){
+      if(this.formInfo.fromLocation == ''){
+        // Invalid location input when choose other
+        this.locationInvalid = true;
+        return
+      }
+      else{
+        // Request google map api
+        var googleGeoApiBaseUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos&address="
+        googleGeoApiBaseUrl += this.formInfo.fromLocation
+        fetch(googleGeoApiBaseUrl)
+          .then(resGeoData => resGeoData.json())
+          .then(resGeoData => {
+            console.log("google map location: ", resGeoData)
+            this.formInfo.latitude = resGeoData["results"][0]["geometry"]["location"]["lat"]
+            this.formInfo.longitude = resGeoData["results"][0]["geometry"]["location"]["lng"]
+            console.log("form info: (other location)", this.formInfo)
+            this.requestBackend()
+          })
+      }
     }
+    else{
+      this.requestBackend()
+    }
+  }
 
-    console.log(this.keywordInvalid);
-    var url = "http://127.0.0.1:8080/?"
-    url += "keyword=" + this.formInfo.keyword
-    url += "&category=" + this.formInfo.category
-    url += "&distance=" + this.formInfo.distance
-    url += "&distanceUnit=" + this.formInfo.distanceUnit
-    url += "&from=" + this.formInfo.from
-    url += "&fromLocation=" + this.formInfo.fromLocation
-
-    this.http.get(url).subscribe(response =>
+  requestBackend(){
+    var backendUrl = "http://127.0.0.1:8080/?"
+    backendUrl += "keyword=" + this.formInfo.keyword
+    backendUrl += "&category=" + this.formInfo.category
+    backendUrl += "&distance=" + this.formInfo.distance
+    backendUrl += "&distanceUnit=" + this.formInfo.distanceUnit
+    backendUrl += "&from=" + this.formInfo.from
+    backendUrl += "&fromLocation=" + this.formInfo.fromLocation
+    backendUrl += "&latitude=" + this.formInfo.latitude
+    backendUrl += "&longitude=" + this.formInfo.longitude
+    console.log("form info:", this.formInfo)
+    this.http.get(backendUrl).subscribe(response =>
       {
         console.log(response);
       });
   }
-
 }
