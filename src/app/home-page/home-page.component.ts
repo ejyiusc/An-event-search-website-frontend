@@ -116,10 +116,16 @@ export class HomePageComponent implements OnInit {
     var backendUrl = "http://127.0.0.1:8080/autocomplete?"
     backendUrl += "keyword=" + keyword
     console.log("Auto-complete backendUrl:", backendUrl)
-    this.http.get(backendUrl).subscribe(response =>
-      {
-        console.log(response);
-      });
+    fetch(backendUrl)
+      .then(resAutoCompleteData => resAutoCompleteData.json())
+      .then(resAutoCompleteData => {
+        console.log(resAutoCompleteData.attractions)
+        var autoCompleteContent = []
+        for(var i = 0; i < resAutoCompleteData.attractions.length; ++i){
+          autoCompleteContent.push(resAutoCompleteData.attractions[i].name)
+        }
+        this.options = autoCompleteContent
+      })
   }
 
   requestBackendToSearch(latitude:String, longitude:String){
