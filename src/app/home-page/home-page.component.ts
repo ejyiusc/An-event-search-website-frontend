@@ -130,18 +130,36 @@ export class HomePageComponent implements OnInit {
 
   requestBackendToSearch(latitude:String, longitude:String){
     var backendUrl = "http://127.0.0.1:8080/?"
+
+    var categorySearch = this.formInfo.category
+    if(categorySearch == ''){
+      categorySearch = "All"
+    }
+
+    var distanceSearch = this.formInfo.distance
+    if(distanceSearch == ''){
+      distanceSearch = "10"
+    }
+
+    var distanceUnitSearch = this.formInfo.distance
+    if(distanceUnitSearch == ''){
+      distanceUnitSearch = "miles"
+    }
+
     backendUrl += "keyword=" + this.formInfo.keyword
-    backendUrl += "&category=" + this.formInfo.category
-    backendUrl += "&distance=" + this.formInfo.distance
-    backendUrl += "&distanceUnit=" + this.formInfo.distanceUnit
+    backendUrl += "&category=" + categorySearch
+    backendUrl += "&distance=" + distanceSearch
+    backendUrl += "&distanceUnit=" + distanceUnitSearch
     backendUrl += "&from=" + this.formInfo.from
     backendUrl += "&fromLocation=" + this.formInfo.fromLocation
     backendUrl += "&latitude=" + latitude
     backendUrl += "&longitude=" + longitude
     console.log("backendUrl:", backendUrl)
-    this.http.get(backendUrl).subscribe(response =>
-      {
-        console.log(response);
-      });
+
+    fetch(backendUrl)
+    .then(response => response.json())
+    .then(response => {
+      console.log("events: ", response)
+    })
   }
 }
