@@ -9,6 +9,7 @@
   </head>
 
   <body>
+      <!-- Form area -->
       <div style="background-color: rgb(218, 218, 218);">
         <p>Entertainment Event Ticket Search</p>
         <div>
@@ -98,6 +99,172 @@
           <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
             <span class="glyphicon glyphicon-search"></span> Clear
           </button>
+        </div>
+      </div>
+      
+      <!-- Search results -->
+      
+      <!-- No records -->
+      <div class="alert alert-warning" *ngIf="noEvents == true">
+        No records.
+      </div>
+
+      
+      <div *ngIf="noEvents == false && showEvents == true">
+        <hr>
+        <button type="button" class="btn btn-default btn-sm">
+          Details<span class="material-icons">arrow_forward_ios</span>
+        </button>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Event</th>
+              <th>Category</th>
+              <th>Venue Info</th>
+              <th>Favorite</th>
+            </tr>
+         </thead>
+         <tbody *ngFor="let item of eventsContent; let i = index">
+          <tr>
+            <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
+            <td>{{ item.dates.start.localDate }}</td>
+            <td>
+              <a href="#" ngbTooltip={{item.name}} (click)="getDetails(i)">
+                {{ item.name }}
+              </a>
+            </td>
+            <td>
+              {{ item.classifications[0].subGenre.name }} | 
+              {{ item.classifications[0].genre.name }} | 
+              {{ item.classifications[0].segment.name }} | 
+              {{ item.classifications[0].subType.name }} | 
+              {{ item.classifications[0].type.name }}
+            </td>
+            <td>{{ item._embedded.venues[0].name }}</td>
+            <td>
+              <a href="#">
+                <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
+              </a>
+            </td>
+          </tr>
+         </tbody>
+        </table>
+      </div>
+
+      <!-- Details -->
+      <div>
+        <div>
+          <!-- Nav bar -->
+          <ul ngbNav #nav="ngbNav" [(activeId)]="navChosen" class="nav-tabs justify-content-end">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Event</a>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Artist/Team</a>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Venue</a>
+            </li>
+          </ul>        
+          <div>Active: {{ navChosen }}</div>
+
+          <!-- Content of each choice in nav bar -->
+
+          <!-- Event tab -->
+          <div *ngIf="navChosen == 1">
+            <table class="table table-striped">
+              <tbody>
+                <tr *ngIf="detailContent.ArtistTeam != ''">
+                  <td>Artist/Team</td>
+                  <td>{{ detailContent.ArtistTeam }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.Venue != ''">
+                  <td>Venue</td>
+                  <td>{{ detailContent.Venue }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.Time != ''">
+                  <td>Time</td>
+                  <td>{{ detailContent.Time }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.Category != ''">
+                  <td>Category</td>
+                  <td>{{ detailContent.Category }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.PriceRange != ''">
+                  <td>Price Range</td>
+                  <td>{{ detailContent.PriceRange }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.TicketStatus != ''">
+                  <td>Ticket Status</td>
+                  <td>{{ detailContent.TicketStatus }}</td>
+                </tr>
+
+                <tr *ngIf="detailContent.BuyTicketAt != ''">
+                  <td>Buy Ticket At</td>
+                  <td><a href= {{detailContent.BuyTicketAt}} target="_blank">Ticketmaster</a></td>
+                </tr>
+
+                <tr *ngIf="detailContent.SeatMap != ''">
+                  <td>Seat Map</td>
+                  <td><a href={{detailContent.SeatMap}} target="_blank">View Seat Map Here</a></td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="navChosen == 2">
+            bbb
+          </div>
+
+          <div *ngIf="navChosen == 3">
+            <table class="table table-striped">
+              <tbody>
+                <tr *ngIf="venueDetailContent.Address != ''">
+                  <td>Address</td>
+                  <td>{{ venueDetailContent.Address }}</td>
+                </tr>
+                <tr *ngIf="venueDetailContent.City != ''">
+                  <td>City</td>
+                  <td>{{ venueDetailContent.City }}</td>
+                </tr>
+                <tr *ngIf="venueDetailContent.PhoneNumber != ''">
+                  <td>Phone Number</td>
+                  <td>{{ venueDetailContent.PhoneNumber }}</td>
+                </tr>
+                <tr *ngIf="venueDetailContent.OpenHours != ''">
+                  <td>Open Hours</td>
+                  <td>{{ venueDetailContent.OpenHours }}</td>
+                </tr>
+                <tr *ngIf="venueDetailContent.GeneralRule != ''">
+                  <td>General Rule</td>
+                  <td>{{ venueDetailContent.GeneralRule }}</td>
+                </tr>
+                <tr *ngIf="venueDetailContent.ChildRule != ''">
+                  <td>Child Rule</td>
+                  <td>{{ venueDetailContent.ChildRule }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>My Google Maps Demo</h3>
+            <!--The div element for the map -->
+            <div id="map"></div>
+
+            <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+            <script
+              src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"
+              async
+            ></script>
+          </div>
+
         </div>
       </div>
 

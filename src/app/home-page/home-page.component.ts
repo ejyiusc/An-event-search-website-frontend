@@ -30,8 +30,36 @@ export class HomePageComponent implements OnInit {
   public latitude:String
 
   // Keyword auto-complete
-  options: string[] = ['One', 'Two', 'Three', 'five'];  // keyword auto-complete content
+  options: string[] = [];  // keyword auto-complete content
   keywordControl = new FormControl();
+
+  public noEvents:boolean = false
+  public showEvents:boolean = false
+ 
+  public eventsContent:any
+  public showDetails:boolean = false
+
+  navChosen = 1;  // Nav bar choice
+  public detailContent = {
+    ArtistTeam: '',
+    Venue: '',
+    VenueId: '',
+    Time: '',
+    Category: '',
+    PriceRange: '',
+    TicketStatus: '',
+    BuyTicketAt: '',
+    SeatMap: '',
+  }
+
+ public venueDetailContent = {
+   Address: '',
+   City: '',
+   PhoneNumber: '',
+   OpenHours: '',
+   GeneralRule: '',
+   ChildRule: '',
+ }
 
   ////////////////
 
@@ -160,6 +188,204 @@ export class HomePageComponent implements OnInit {
     .then(response => response.json())
     .then(response => {
       console.log("events: ", response)
+      if(response.page.totalElements == 0){
+        console.log("No Events")
+        this.noEvents = true
+      }
+      else{
+        this.eventsContent = response._embedded.events.sort(this.sortFunction)
+        this.showEvents = true
+        console.log('eventsContent: ', this.eventsContent)
+      }
     })
+  }
+
+  getDetails(index:number){
+    
+    console.log("index: ", this.eventsContent[index])
+
+    var Venue = ''
+    var VenueId = ''
+    if(this.eventsContent[index].hasOwnProperty('_embedded') && 
+        this.eventsContent[index]._embedded.hasOwnProperty('venues') &&
+        this.eventsContent[index]._embedded.venues.length != 0){
+          Venue = this.eventsContent[index]._embedded.venues[0].name
+          VenueId = this.eventsContent[index]._embedded.venues[0].id
+        }
+    if(Venue != ''){
+      this.detailContent.Venue = Venue
+    }
+    if(VenueId != ''){
+      this.detailContent.VenueId = VenueId
+
+      // Search for venue details
+      var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/venueDetail?"
+      searchVenueDetailsBackendUrl += "id=" + this.detailContent.VenueId
+      fetch(searchVenueDetailsBackendUrl)
+      .then(response => response.json())
+      .then(response => {
+        console.log("venue details: ", response)
+
+        if(response.hasOwnProperty('venues') && 
+          response.venues.length > 0){
+            // Address
+            if(response.venues[0].hasOwnProperty('address')){
+              if(response.venues[0].address.hasOwnProperty('line1')){
+                this.venueDetailContent.Address = response.venues[0].address.line1
+              }
+            }
+
+            // City
+            if(response.venues[0].hasOwnProperty('city')){
+              if(response.venues[0].city.hasOwnProperty('name')){
+                this.venueDetailContent.City = response.venues[0].city.name
+              }
+            }
+
+            if(response.venues[0].hasOwnProperty('state')){
+              if(response.venues[0].city.hasOwnProperty('name')){
+                this.venueDetailContent.City += ', ' + response.venues[0].state.name
+              }
+            }
+
+            if(response.venues[0].hasOwnProperty('boxOfficeInfo')){
+              // Phone Number
+              if(response.venues[0].boxOfficeInfo.hasOwnProperty('phoneNumberDetail')){
+                this.venueDetailContent.PhoneNumber = response.venues[0].boxOfficeInfo.phoneNumberDetail
+              }
+
+              // Open hours
+              if(response.venues[0].boxOfficeInfo.hasOwnProperty('openHoursDetail')){
+                this.venueDetailContent.OpenHours = response.venues[0].boxOfficeInfo.openHoursDetail
+              }
+            }
+
+            if(response.venues[0].hasOwnProperty('generalInfo')){
+              // General Rule
+              if(response.venues[0].generalInfo.hasOwnProperty('generalRule')){
+                this.venueDetailContent.GeneralRule = response.venues[0].generalInfo.generalRule
+              }
+
+              // Child Rule
+              if(response.venues[0].generalInfo.hasOwnProperty('childlRule')){
+                this.venueDetailContent.ChildRule = response.venues[0].generalInfo.childlRule
+              }
+            }
+
+          console.log("this.venueDetailContent", this.venueDetailContent)
+
+        }
+      })
+    }
+
+    var ArtistTeam = ''
+    if(this.eventsContent[index].hasOwnProperty('_embedded') && 
+        this.eventsContent[index]._embedded.hasOwnProperty('attractions')){
+      for(var i = 0; i < this.eventsContent[index]._embedded.attractions.length; ++i){
+        ArtistTeam += this.eventsContent[index]._embedded.attractions[i].name 
+        if(i != this.eventsContent[index]._embedded.attractions.length - 1){
+          ArtistTeam += ' | '
+        }
+      }
+    }
+    if(ArtistTeam != ''){
+      this.detailContent['ArtistTeam'] = ArtistTeam
+    }
+    
+    
+
+    var Time = ''
+    if(this.eventsContent[index].hasOwnProperty('dates') && 
+        this.eventsContent[index].dates.hasOwnProperty('start') &&
+        this.eventsContent[index].dates.start.hasOwnProperty('localDate')){
+          Time = this.eventsContent[index].dates.start.localDate
+        }
+    if(Time != ''){
+      this.detailContent.Time = Time
+    }
+
+    var Category = ''
+    var categoryContent = []
+    if(this.eventsContent[index].hasOwnProperty('classifications')){
+      if(this.eventsContent[index].classifications[0].hasOwnProperty('subGenre')){
+        categoryContent.push(this.eventsContent[index].classifications[0].subGenre.name)
+      }
+      if(this.eventsContent[index].classifications[0].hasOwnProperty('genre')){
+        categoryContent.push(this.eventsContent[index].classifications[0].genre.name)
+      }
+      if(this.eventsContent[index].classifications[0].hasOwnProperty('segment')){
+        categoryContent.push(this.eventsContent[index].classifications[0].segment.name)
+      }
+      if(this.eventsContent[index].classifications[0].hasOwnProperty('subType')){
+        categoryContent.push(this.eventsContent[index].classifications[0].subType.name)
+      }
+      if(this.eventsContent[index].classifications[0].hasOwnProperty('type')){
+        categoryContent.push(this.eventsContent[index].classifications[0].type.name)
+      }
+
+      for(var i = 0; i < categoryContent.length; ++i){
+        Category += categoryContent[i]
+        if(i != categoryContent.length - 1){
+          Category += ' | '
+        }
+      }
+    }
+    if(Category != ''){
+      this.detailContent.Category = Category
+    }
+    
+    var PriceRange = ''
+    if(this.eventsContent[index].hasOwnProperty('priceRanges')){
+      PriceRange += this.eventsContent[index].priceRanges[0].min + '-' + this.eventsContent[index].priceRanges[0].max + ' USD'
+    }
+    if(PriceRange != ''){
+      this.detailContent.PriceRange = PriceRange
+    }
+
+    var TicketStatus = ''
+    if(this.eventsContent[index].hasOwnProperty('dates') && 
+        this.eventsContent[index].dates.hasOwnProperty('status') &&
+        this.eventsContent[index].dates.status.hasOwnProperty('code')){
+      TicketStatus += this.eventsContent[index].dates.status.code
+    }
+    if(TicketStatus != ''){
+      this.detailContent.TicketStatus = TicketStatus
+    }
+
+    var BuyTicketAt = ''
+    if(this.eventsContent[index].hasOwnProperty('url')){
+        BuyTicketAt += this.eventsContent[index].url
+    }
+    if(BuyTicketAt != ''){
+      this.detailContent.BuyTicketAt = BuyTicketAt
+    }
+
+    // Seat Map
+    var SeatMap = ''
+    if(this.eventsContent[index].hasOwnProperty('seatmap') && 
+      this.eventsContent[index].seatmap.hasOwnProperty('staticUrl')){
+        SeatMap += this.eventsContent[index].url
+    }
+    if(SeatMap != ''){
+      this.detailContent.SeatMap = SeatMap
+    }
+    console.log("this.detailContent.VenueId: ", this.detailContent.VenueId)
+    
+
+  }
+// google map key AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos
+  
+  setFavorite(index:number){
+
+  }
+
+  // Sort events in ascending order of “date” column
+  sortFunction(x:any,y:any)
+  {
+    var dateX = new Date(x.dates.start.localDate)
+    var xTimestamp = dateX.getTime()
+    var dateY = new Date(y.dates.start.localDate)
+    var yTimestamp = dateY.getTime()
+    return xTimestamp - yTimestamp
   }
 }
