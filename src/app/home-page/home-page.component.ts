@@ -38,8 +38,11 @@ export class HomePageComponent implements OnInit {
  
   public eventsContent:any
   public showDetails:boolean = false
-
+  ResultsFavorites = 1; //Result or Favorite
   navChosen = 1;  // Nav bar choice
+
+  // Nav bar 1
+  currentEventsContentForDetails:any  // The details part displays which event content
   public detailContent = {
     ArtistTeam: '',
     ArtistTeamList: [''],
@@ -54,19 +57,28 @@ export class HomePageComponent implements OnInit {
     Name: '',
   }
 
- public venueDetailContent = {
-   Address: '',
-   City: '',
-   PhoneNumber: '',
-   OpenHours: '',
-   GeneralRule: '',
-   ChildRule: '',
- }
+  // Nav bar 2
+  artistContentList:any = []
 
- public twitterApi = "https://twitter.com/intent/tweet?text="
- spotifyArtistList:any = []
- spotifyArtist:any = {}
- artistContentList:any = []
+  // Nav bar 3
+  public venueDetailContent = {
+    Address: '',
+    City: '',
+    PhoneNumber: '',
+    OpenHours: '',
+    GeneralRule: '',
+    ChildRule: '',
+  }
+
+  public twitterApi = "https://twitter.com/intent/tweet?text="
+  spotifyArtistList:any = []
+  spotifyArtist:any = {}
+ 
+  // Favorite
+  favoriteContent:any = []
+  favoriteTemp:any = {}
+  favoriteEventsContentForFrontend:any = []
+
 
   ////////////////
 
@@ -208,16 +220,21 @@ export class HomePageComponent implements OnInit {
   }
 
   getDetails(index:number){
+    this.currentEventsContentForDetails = this.eventsContent[index] // The details part displays which event content
+    this.getDetailsContent(this.eventsContent[index])
+  }
+
+  getDetailsContent(eventsContent:any){
     
-    console.log("index: ", this.eventsContent[index])
+    console.log("index: ", eventsContent)
 
     var Venue = ''
     var VenueId = ''
-    if(this.eventsContent[index].hasOwnProperty('_embedded') && 
-        this.eventsContent[index]._embedded.hasOwnProperty('venues') &&
-        this.eventsContent[index]._embedded.venues.length != 0){
-          Venue = this.eventsContent[index]._embedded.venues[0].name
-          VenueId = this.eventsContent[index]._embedded.venues[0].id
+    if(eventsContent.hasOwnProperty('_embedded') && 
+        eventsContent._embedded.hasOwnProperty('venues') &&
+        eventsContent._embedded.venues.length != 0){
+          Venue = eventsContent._embedded.venues[0].name
+          VenueId = eventsContent._embedded.venues[0].id
         }
     if(Venue != ''){
       this.detailContent.Venue = Venue
@@ -284,16 +301,15 @@ export class HomePageComponent implements OnInit {
     }
 
     // Event name
-    this.detailContent['Name'] = this.eventsContent[index].name
-    
+    this.detailContent['Name'] = eventsContent.name
 
     var ArtistTeam = ''
-    if(this.eventsContent[index].hasOwnProperty('_embedded') && 
-        this.eventsContent[index]._embedded.hasOwnProperty('attractions')){
-      for(var i = 0; i < this.eventsContent[index]._embedded.attractions.length; ++i){
-        ArtistTeam += this.eventsContent[index]._embedded.attractions[i].name
-        this.detailContent.ArtistTeamList.push(this.eventsContent[index]._embedded.attractions[i].name)
-        if(i != this.eventsContent[index]._embedded.attractions.length - 1){
+    if(eventsContent.hasOwnProperty('_embedded') && 
+        eventsContent._embedded.hasOwnProperty('attractions')){
+      for(var i = 0; i < eventsContent._embedded.attractions.length; ++i){
+        ArtistTeam += eventsContent._embedded.attractions[i].name
+        this.detailContent.ArtistTeamList.push(eventsContent._embedded.attractions[i].name)
+        if(i != eventsContent._embedded.attractions.length - 1){
           ArtistTeam += ' | '
         }
       }
@@ -304,10 +320,10 @@ export class HomePageComponent implements OnInit {
     
     // Time
     var Time = ''
-    if(this.eventsContent[index].hasOwnProperty('dates') && 
-        this.eventsContent[index].dates.hasOwnProperty('start') &&
-        this.eventsContent[index].dates.start.hasOwnProperty('localDate')){
-          Time = this.eventsContent[index].dates.start.localDate
+    if(eventsContent.hasOwnProperty('dates') && 
+        eventsContent.dates.hasOwnProperty('start') &&
+        eventsContent.dates.start.hasOwnProperty('localDate')){
+          Time = eventsContent.dates.start.localDate
         }
     if(Time != ''){
       this.detailContent.Time = Time
@@ -315,21 +331,21 @@ export class HomePageComponent implements OnInit {
 
     var Category = ''
     var categoryContent = []
-    if(this.eventsContent[index].hasOwnProperty('classifications')){
-      if(this.eventsContent[index].classifications[0].hasOwnProperty('subGenre')){
-        categoryContent.push(this.eventsContent[index].classifications[0].subGenre.name)
+    if(eventsContent.hasOwnProperty('classifications')){
+      if(eventsContent.classifications[0].hasOwnProperty('subGenre')){
+        categoryContent.push(eventsContent.classifications[0].subGenre.name)
       }
-      if(this.eventsContent[index].classifications[0].hasOwnProperty('genre')){
-        categoryContent.push(this.eventsContent[index].classifications[0].genre.name)
+      if(eventsContent.classifications[0].hasOwnProperty('genre')){
+        categoryContent.push(eventsContent.classifications[0].genre.name)
       }
-      if(this.eventsContent[index].classifications[0].hasOwnProperty('segment')){
-        categoryContent.push(this.eventsContent[index].classifications[0].segment.name)
+      if(eventsContent.classifications[0].hasOwnProperty('segment')){
+        categoryContent.push(eventsContent.classifications[0].segment.name)
       }
-      if(this.eventsContent[index].classifications[0].hasOwnProperty('subType')){
-        categoryContent.push(this.eventsContent[index].classifications[0].subType.name)
+      if(eventsContent.classifications[0].hasOwnProperty('subType')){
+        categoryContent.push(eventsContent.classifications[0].subType.name)
       }
-      if(this.eventsContent[index].classifications[0].hasOwnProperty('type')){
-        categoryContent.push(this.eventsContent[index].classifications[0].type.name)
+      if(eventsContent.classifications[0].hasOwnProperty('type')){
+        categoryContent.push(eventsContent.classifications[0].type.name)
       }
 
       for(var i = 0; i < categoryContent.length; ++i){
@@ -344,26 +360,26 @@ export class HomePageComponent implements OnInit {
     }
     
     var PriceRange = ''
-    if(this.eventsContent[index].hasOwnProperty('priceRanges')){
-      PriceRange += this.eventsContent[index].priceRanges[0].min + '-' + this.eventsContent[index].priceRanges[0].max + ' USD'
+    if(eventsContent.hasOwnProperty('priceRanges')){
+      PriceRange += eventsContent.priceRanges[0].min + '-' + eventsContent.priceRanges[0].max + ' USD'
     }
     if(PriceRange != ''){
       this.detailContent.PriceRange = PriceRange
     }
 
     var TicketStatus = ''
-    if(this.eventsContent[index].hasOwnProperty('dates') && 
-        this.eventsContent[index].dates.hasOwnProperty('status') &&
-        this.eventsContent[index].dates.status.hasOwnProperty('code')){
-      TicketStatus += this.eventsContent[index].dates.status.code
+    if(eventsContent.hasOwnProperty('dates') && 
+        eventsContent.dates.hasOwnProperty('status') &&
+        eventsContent.dates.status.hasOwnProperty('code')){
+      TicketStatus += eventsContent.dates.status.code
     }
     if(TicketStatus != ''){
       this.detailContent.TicketStatus = TicketStatus
     }
 
     var BuyTicketAt = ''
-    if(this.eventsContent[index].hasOwnProperty('url')){
-        BuyTicketAt += this.eventsContent[index].url
+    if(eventsContent.hasOwnProperty('url')){
+        BuyTicketAt += eventsContent.url
     }
     if(BuyTicketAt != ''){
       this.detailContent.BuyTicketAt = BuyTicketAt
@@ -371,9 +387,9 @@ export class HomePageComponent implements OnInit {
 
     // Seat Map
     var SeatMap = ''
-    if(this.eventsContent[index].hasOwnProperty('seatmap') && 
-      this.eventsContent[index].seatmap.hasOwnProperty('staticUrl')){
-        SeatMap += this.eventsContent[index].url
+    if(eventsContent.hasOwnProperty('seatmap') && 
+      eventsContent.seatmap.hasOwnProperty('staticUrl')){
+        SeatMap += eventsContent.url
     }
     if(SeatMap != ''){
       this.detailContent.SeatMap = SeatMap
@@ -405,9 +421,6 @@ export class HomePageComponent implements OnInit {
         }
       })
     }
-    // console.log("this.spotifyArtistList: ", this.spotifyArtistList)
-    
-
   }
 // google map key AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos
   
@@ -418,7 +431,7 @@ export class HomePageComponent implements OnInit {
       if(this.spotifyArtistList[i].hasOwnProperty('artists') && this.spotifyArtistList[i].artists.hasOwnProperty('items')){
         for(var j = 0; j < this.spotifyArtistList[i].artists.items.length; ++j){
           var artistName = this.spotifyArtistList[i].artists.items[j].name
-          console.log("artist name: ", artistName)
+          // console.log("artist name: ", artistName)
           for(var k = 0; k < this.detailContent.ArtistTeamList.length; ++k){
             console.log("name to match: ", k, this.detailContent.ArtistTeamList[k])
             
@@ -441,8 +454,113 @@ export class HomePageComponent implements OnInit {
     console.log("deal artist data: ", this.artistContentList)
   }
 
-  setFavorite(index:number){
+  getFavorite(){
+    var favoriteContent = localStorage.getItem('favorite');  // get local storage
+    if(favoriteContent == null){  // if no favorite in local storage
+      favoriteContent = '[]'
+    }
+    var favoriteList = JSON.parse(favoriteContent)  // change from string to list
+    if(favoriteList[0] == null){
+      favoriteList.splice(0,1)
+    }
+    this.favoriteEventsContentForFrontend = favoriteList
+  }
 
+  getDetailsFavorite(index:number){
+    console.log('this.favoriteEventsContentForFrontend[index]', this.favoriteEventsContentForFrontend[index])
+    this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
+    this.getDetailsContent(this.favoriteEventsContentForFrontend[index])
+    
+  }
+
+  setFavorite(index:number, alreadyGetDetail:boolean){
+    console.log("setFavorite:", index, alreadyGetDetail)
+    // localStorage.removeItem('favorite');
+    var favoriteContent = localStorage.getItem('favorite');  // get local storage
+    if(favoriteContent == null){  // if no favorite in local storage
+      favoriteContent = '[]'
+    }
+    var favoriteList = JSON.parse(favoriteContent)  // change from string to list
+
+    if(index != -1){
+      if(this.ResultsFavorites == 1){
+        this.currentEventsContentForDetails = this.eventsContent[index]
+      }
+      else if(this.ResultsFavorites == 2){
+        this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
+      }
+    }
+    // else{
+    //   if(this.ResultsFavorites == 1){
+    //     this.currentEventsContentForDetails = this.eventsContent[index]
+    //   }
+    //   else if(this.ResultsFavorites == 2){
+    //     this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
+    //   }
+    // }
+    console.log("this.currentEventsContentForDetails", this.currentEventsContentForDetails)
+    var deleteFlag = false
+    for(var i = 0; i < favoriteList.length; ++i){
+      if(favoriteList[i] != null && favoriteList[i].hasOwnProperty('name') && favoriteList[i].name == this.currentEventsContentForDetails.name){
+        // delete from favorite list
+        favoriteList.splice(i,1)
+        deleteFlag = true
+        console.log("delete favorite")
+        break
+      }
+    }
+
+    // add 
+    if(deleteFlag == false){
+      console.log("add favorite")
+      // add to favorite
+      favoriteList.push(this.currentEventsContentForDetails)
+    }
+    this.favoriteEventsContentForFrontend = favoriteList
+
+    console.log("this.favoriteEventsContentForFrontend", this.favoriteEventsContentForFrontend)
+    // set local storage
+    localStorage.setItem('favorite', JSON.stringify(favoriteList))
+
+    // if(index == -1){
+
+    // }
+    // console.log("setFavorite:", index, alreadyGetDetail)
+    // if(index == -1){
+    //   this.favoriteTemp.event = this.detailContent  // first tab
+    //   this.favoriteTemp.artist = this.artistContentList
+    //   this.favoriteTemp.venue = this.venueDetailContent
+    // }
+    // console.log("this.favoriteTemp: ", this.favoriteTemp)
+
+    // var favoriteContent = localStorage.getItem('favorite');  // get local storage
+    // if(favoriteContent == null){  // if no favorite in local storage
+    //   favoriteContent = '[]'
+    // }
+    // var favoriteList = JSON.parse(favoriteContent)  // change from string to list
+    
+    // var deleteFlag = false
+    // for(var i = 0; i < favoriteList.length; ++i){
+    //   if(favoriteList[i].hasOwnProperty('event') && favoriteList[i].event.Name == this.detailContent.Name){
+    //     // delete from favorite list
+    //     favoriteList.splice(i,1)
+    //     deleteFlag = true
+    //   }
+    // }
+
+    // // add 
+    // if(deleteFlag == false){
+    //   // add to favorite
+    //   favoriteList.push(this.favoriteTemp)
+    //   // clear this.favoriteTemp
+    //   this.favoriteTemp = {}
+    // }
+    // // send to front-end
+    // this.favoriteForFrontend = favoriteList
+    // console.log("this.favoriteForFrontend", this.favoriteForFrontend, this.favoriteForFrontend.length)
+    // // set local storage
+    // localStorage.setItem('favorite', JSON.stringify(favoriteList))
+    
   }
 
   // Sort events in ascending order of “date” column
