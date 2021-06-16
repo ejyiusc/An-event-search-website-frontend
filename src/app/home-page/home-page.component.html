@@ -159,6 +159,11 @@
           <a class="twitter-share-button"
             href={{twitterApi}} target="_blank">
             <img src="https://csci571.com/hw/hw8/images/Twitter.png" style="width: 40px; height: 40px;"></a>
+          <button type="button" class="btn btn-default">
+            <a href="#">
+              <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
+            </a>
+          </button>
           <!-- Nav bar -->
           <ul ngbNav #nav="ngbNav" [(activeId)]="navChosen" class="nav-tabs justify-content-end">
             <li [ngbNavItem]="1">
@@ -223,10 +228,30 @@
             </table>
           </div>
 
+          <!-- Artist/Team tab -->
           <div *ngIf="navChosen == 2">
-            bbb
+            <table class="table table-hover" *ngFor="let item of artistContentList; let i = index">
+              <thead align="center">
+                  {{item.Name}}
+              </thead>
+             <tbody>
+              <tr>
+                <td>Name</td><td>{{item.Name}}</td>
+              </tr>
+              <tr>
+                <td>Followers</td><td>{{item.Followers}}</td>
+              </tr>
+              <tr>
+                <td>Popularity</td><td>{{item.Popularity}}</td>
+              </tr>
+              <tr>
+                <td>Check At</td><td><a href={{item.CheckAt}} target="_blank">Spotify</a></td>
+              </tr>
+             </tbody>
+            </table>
           </div>
 
+          <!-- Venue tab -->
           <div *ngIf="navChosen == 3">
             <table class="table table-striped">
               <tbody>

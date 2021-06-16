@@ -66,6 +66,7 @@ export class HomePageComponent implements OnInit {
  public twitterApi = "https://twitter.com/intent/tweet?text="
  spotifyArtistList:any = []
  spotifyArtist:any = {}
+ artistContentList:any = []
 
   ////////////////
 
@@ -411,16 +412,33 @@ export class HomePageComponent implements OnInit {
 // google map key AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos
   
   dealArtistData(){
+    var artistContent:any = []
+    this.detailContent.ArtistTeamList.splice(0, 1)
     for(var i = 0; i < this.spotifyArtistList.length; ++i){
       if(this.spotifyArtistList[i].hasOwnProperty('artists') && this.spotifyArtistList[i].artists.hasOwnProperty('items')){
         for(var j = 0; j < this.spotifyArtistList[i].artists.items.length; ++j){
-          if(this.spotifyArtistList[i].artists.items[j].name == this.detailContent.ArtistTeamList[i+1]){
-
+          var artistName = this.spotifyArtistList[i].artists.items[j].name
+          console.log("artist name: ", artistName)
+          for(var k = 0; k < this.detailContent.ArtistTeamList.length; ++k){
+            console.log("name to match: ", k, this.detailContent.ArtistTeamList[k])
+            
+            // Match
+            if(artistName == this.detailContent.ArtistTeamList[k]){  
+              console.log("match")
+              this.detailContent.ArtistTeamList.splice(k, 1)
+              artistContent.push({Name:artistName,
+                                  Followers: this.spotifyArtistList[i].artists.items[j].followers.total,
+                                  Popularity: this.spotifyArtistList[i].artists.items[j].popularity,
+                                  CheckAt: this.spotifyArtistList[i].artists.items[j].external_urls.spotify
+                                })
+              break
+            }
           }
         }
-      }
-      
+      } 
     }
+    this.artistContentList = artistContent
+    console.log("deal artist data: ", this.artistContentList)
   }
 
   setFavorite(index:number){
