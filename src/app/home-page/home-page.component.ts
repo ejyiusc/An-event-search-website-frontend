@@ -50,6 +50,7 @@ export class HomePageComponent implements OnInit {
     TicketStatus: '',
     BuyTicketAt: '',
     SeatMap: '',
+    Name: '',
   }
 
  public venueDetailContent = {
@@ -60,6 +61,8 @@ export class HomePageComponent implements OnInit {
    GeneralRule: '',
    ChildRule: '',
  }
+
+ public twitterApi = "https://twitter.com/intent/tweet?text="
 
   ////////////////
 
@@ -274,9 +277,15 @@ export class HomePageComponent implements OnInit {
 
           console.log("this.venueDetailContent", this.venueDetailContent)
 
+            
+
         }
       })
     }
+
+    // Event name
+    this.detailContent['Name'] = this.eventsContent[index].name
+    
 
     var ArtistTeam = ''
     if(this.eventsContent[index].hasOwnProperty('_embedded') && 
@@ -369,7 +378,15 @@ export class HomePageComponent implements OnInit {
     if(SeatMap != ''){
       this.detailContent.SeatMap = SeatMap
     }
+    console.log("this.detailContent", this.detailContent)
     console.log("this.detailContent.VenueId: ", this.detailContent.VenueId)
+
+    // Twitter
+    this.twitterApi += "Check out " + this.detailContent.Name + 
+                      " located at " + this.detailContent.Venue +
+                      ". &hashtags=CSCI571EventSearch"
+
+    console.log("twitter api:", this.twitterApi)
     
 
   }
