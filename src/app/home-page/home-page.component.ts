@@ -42,6 +42,7 @@ export class HomePageComponent implements OnInit {
   navChosen = 1;  // Nav bar choice
   public detailContent = {
     ArtistTeam: '',
+    ArtistTeamList: [''],
     Venue: '',
     VenueId: '',
     Time: '',
@@ -63,6 +64,8 @@ export class HomePageComponent implements OnInit {
  }
 
  public twitterApi = "https://twitter.com/intent/tweet?text="
+ spotifyArtistList:any = []
+ spotifyArtist:any = {}
 
   ////////////////
 
@@ -274,11 +277,7 @@ export class HomePageComponent implements OnInit {
                 this.venueDetailContent.ChildRule = response.venues[0].generalInfo.childlRule
               }
             }
-
           console.log("this.venueDetailContent", this.venueDetailContent)
-
-            
-
         }
       })
     }
@@ -291,7 +290,8 @@ export class HomePageComponent implements OnInit {
     if(this.eventsContent[index].hasOwnProperty('_embedded') && 
         this.eventsContent[index]._embedded.hasOwnProperty('attractions')){
       for(var i = 0; i < this.eventsContent[index]._embedded.attractions.length; ++i){
-        ArtistTeam += this.eventsContent[index]._embedded.attractions[i].name 
+        ArtistTeam += this.eventsContent[index]._embedded.attractions[i].name
+        this.detailContent.ArtistTeamList.push(this.eventsContent[index]._embedded.attractions[i].name)
         if(i != this.eventsContent[index]._embedded.attractions.length - 1){
           ArtistTeam += ' | '
         }
@@ -301,8 +301,7 @@ export class HomePageComponent implements OnInit {
       this.detailContent['ArtistTeam'] = ArtistTeam
     }
     
-    
-
+    // Time
     var Time = ''
     if(this.eventsContent[index].hasOwnProperty('dates') && 
         this.eventsContent[index].dates.hasOwnProperty('start') &&
@@ -382,16 +381,48 @@ export class HomePageComponent implements OnInit {
     console.log("this.detailContent.VenueId: ", this.detailContent.VenueId)
 
     // Twitter
-    this.twitterApi += "Check out " + this.detailContent.Name + 
+    this.twitterApi = "https://twitter.com/intent/tweet?text=Check out " + this.detailContent.Name + 
                       " located at " + this.detailContent.Venue +
                       ". &hashtags=CSCI571EventSearch"
 
     console.log("twitter api:", this.twitterApi)
+
+    // Request backend to call Spotify api
+    var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/spotify?"
+    for(var i = 1; i < this.detailContent.ArtistTeamList.length; ++i){
+      var searchArtistUrl = searchVenueDetailsBackendUrl + "artist=" + this.detailContent.ArtistTeamList[i]
+      fetch(searchArtistUrl)
+      .then(response => response.json())
+      .then(response => {
+        console.log("spotify: ", response)
+
+        this.spotifyArtistList.push(response)
+        console.log("this.spotifyArtistList: ", this.spotifyArtistList)
+        if(this.spotifyArtistList.length == this.detailContent.ArtistTeamList.length-1){
+          console.log("artist complete", this.spotifyArtistList)
+          this.dealArtistData()
+        }
+      })
+    }
+    // console.log("this.spotifyArtistList: ", this.spotifyArtistList)
     
 
   }
 // google map key AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos
   
+  dealArtistData(){
+    for(var i = 0; i < this.spotifyArtistList.length; ++i){
+      if(this.spotifyArtistList[i].hasOwnProperty('artists') && this.spotifyArtistList[i].artists.hasOwnProperty('items')){
+        for(var j = 0; j < this.spotifyArtistList[i].artists.items.length; ++j){
+          if(this.spotifyArtistList[i].artists.items[j].name == this.detailContent.ArtistTeamList[i+1]){
+
+          }
+        }
+      }
+      
+    }
+  }
+
   setFavorite(index:number){
 
   }
