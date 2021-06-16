@@ -275,7 +275,7 @@ export class HomePageComponent implements OnInit {
 
               // Child Rule
               if(response.venues[0].generalInfo.hasOwnProperty('childRule')){
-                this.venueDetailContent.ChildRule = response.venues[0].generalInfo.childlRule
+                this.venueDetailContent.ChildRule = response.venues[0].generalInfo.childRule
               }
             }
           console.log("this.venueDetailContent", this.venueDetailContent)
