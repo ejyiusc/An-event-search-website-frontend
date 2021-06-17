@@ -188,7 +188,10 @@
             <!-- Events table -->
             <div *ngIf="noEvents == false">
               <hr>
-              <button type="button" class="btn btn-default" (click)="goToDetails()">
+              <button type="button" class="btn btn-default" *ngIf="currentEventsContentForDetails == undefined" (click)="goToDetails()" disabled>
+                Details<span class="material-icons">chevron_right</span>
+              </button>
+              <button type="button" class="btn btn-default" *ngIf="currentEventsContentForDetails != undefined" (click)="goToDetails()">
                 Details<span class="material-icons">chevron_right</span>
               </button>
               <table class="table table-hover">
@@ -323,36 +326,43 @@
 
           <!-- Artist/Team tab -->
           <div *ngIf="navChosen == 2">
-            <table class="table table-hover" *ngFor="let item of artistContentList; let i = index">
-              <thead align="center">
-                  {{item.Name}}
-              </thead>
-             <tbody>
-              <tr>
-                <td>Name</td><td>{{item.Name}}</td>
-              </tr>
-              <tr>
-                <td>Followers</td><td>{{item.Followers}}</td>
-              </tr>
-              <tr>
-                <td>Popularity</td>
-                <td>
-                  <div style="position: relative;"><round-progress 
-                  [current]="item.Popularity" 
-                  [max]="100"
-                  [color]="'#48BD28'"
-                  [stroke]="5"
-                  [radius]="20"
-                  ></round-progress>
-                  <p style="position: absolute;top: 0%; left:3%; margin-top: 3%;">{{item.Popularity}}</p>
-                </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Check At</td><td><a href={{item.CheckAt}} target="_blank">Spotify</a></td>
-              </tr>
-             </tbody>
-            </table>
+            <div *ngIf="artistContentList?.length == 0">
+              <div class="alert alert-warning">
+                No records.
+              </div>
+            </div>
+            <div *ngIf="artistContentList?.length > 0">
+              <table class="table table-hover" *ngFor="let item of artistContentList; let i = index">
+                <thead align="center">
+                    {{item.Name}}
+                </thead>
+              <tbody>
+                <tr>
+                  <td>Name</td><td>{{item.Name}}</td>
+                </tr>
+                <tr>
+                  <td>Followers</td><td>{{item.Followers}}</td>
+                </tr>
+                <tr>
+                  <td>Popularity</td>
+                  <td>
+                    <div style="position: relative;"><round-progress 
+                    [current]="item.Popularity" 
+                    [max]="100"
+                    [color]="'#48BD28'"
+                    [stroke]="5"
+                    [radius]="20"
+                    ></round-progress>
+                    <p style="position: absolute;top: 0%; left:3%; margin-top: 3%;">{{item.Popularity}}</p>
+                  </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Check At</td><td><a href={{item.CheckAt}} target="_blank">Spotify</a></td>
+                </tr>
+              </tbody>
+              </table>
+          </div>
           </div>
 
           <!-- Venue tab -->

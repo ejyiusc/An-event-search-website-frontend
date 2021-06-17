@@ -95,6 +95,8 @@ export class HomePageComponent implements OnInit {
   showFavorite = false
   // Seat map
   showModal = false
+
+  noArtists = false
   
 
   ////////////////
@@ -140,7 +142,9 @@ export class HomePageComponent implements OnInit {
 
     this.keywordInvalid = false
     this.locationInvalid = false
+    this.noEvents = false
     console.log("clear finished")
+    console.log(this.currentEventsContentForDetails)
   }
 
   checkForm(){
