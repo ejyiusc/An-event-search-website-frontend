@@ -116,6 +116,7 @@ export class HomePageComponent implements OnInit {
     // When inputed keyword changes, request backend to auto-complete
     this.keywordControl.valueChanges.subscribe(realTimeKeyword => {
       console.log('realTimeKeyword: ', realTimeKeyword)
+      this.keywordInvalid = false
       this.requestBackendToAutoComplete(realTimeKeyword)
     })
   }
@@ -137,6 +138,25 @@ export class HomePageComponent implements OnInit {
     this.keywordInvalid = false
     this.locationInvalid = false
     console.log("clear finished")
+  }
+
+  checkForm(){
+    this.keywordInvalid = false;
+    this.locationInvalid = false;
+
+    // Invalid keyword input
+    this.formInfo.keyword = this.keywordControl.value
+    console.log("this.formInfo.keyword", this.formInfo.keyword)
+    if(this.formInfo.keyword == null || this.formInfo.keyword ==''){
+      this.keywordInvalid = true;
+    }
+
+    if(this.formInfo.from == 'Other'){
+      if(this.formInfo.fromLocation == ''){
+        // Invalid location input when choose other
+        this.locationInvalid = true;
+      }
+    }
   }
 
   doSubmit() {

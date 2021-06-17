@@ -23,7 +23,9 @@
               matInput
               [formControl]="keywordControl"
               [matAutocomplete]="auto"
-              style="display: inline; width: 300px">
+              style="display: inline; width: 300px"
+              (blur)="checkForm()"
+              autofocus>
 
               <!-- When input keyword is invalid, display this part -->
               <input type="text"
@@ -33,7 +35,8 @@
               matInput
               [formControl]="keywordControl"
               [matAutocomplete]="auto"
-              style="display: inline; width: 300px; border: 3px solid red;">
+              style="display: inline; width: 300px; border: 3px solid red;"
+              autofocus>
 
               <!-- Error message -->
               <div *ngIf="keywordInvalid == true" style="color: red;">Please enter a keyword</div>
@@ -83,9 +86,9 @@
           </label>
           <br>
           <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px" disabled>
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px">
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px; border: 3px solid red;">
-          <div *ngIf="locationInvalid == true" style="color: red;">Please enter a location</div>
+          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()" style="display: inline; width: 300px" autofocus>
+          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()" style="display: inline; width: 300px; border: 3px solid red;" autofocus>
+          <div *ngIf="formInfo.from == 'Other' && locationInvalid == true" style="color: red;">Please enter a location</div>
         </div>
       </div>
         
