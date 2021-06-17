@@ -11,7 +11,7 @@
   <body>
       <!--. Form area -->
       <div style="background-color: rgb(218, 218, 218);">
-        <p>Entertainment Event Ticket Search</p>
+        <h3 style="font-weight: 500;">Entertainment Event Ticket Search</h3>
         <div>
           <p style="display: inline;">Keyword<span style="color:red;">* </span></p>
           <form class="example-form" style="display: inline;">
@@ -66,7 +66,7 @@
           <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
           <select id="category" class="form-control" style="width: 100px; display: inline;" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
         　　<option value="">Miles</option>
-            <option value="Kilometers">Kilometers</option>
+            <option value="km">Kilometers</option>
           </select>   
         </div>
         <br>
@@ -150,11 +150,7 @@
                 </a>
               </td>
               <td>
-                {{ item.classifications[0].subGenre.name }} | 
-                {{ item.classifications[0].genre.name }} | 
-                {{ item.classifications[0].segment.name }} | 
-                {{ item.classifications[0].subType.name }} | 
-                {{ item.classifications[0].type.name }}
+                {{ item.Category }}
               </td>
               <td>{{ item._embedded.venues[0].name }}</td>
               <td>
@@ -202,11 +198,7 @@
                     </a>
                   </td>
                   <td>
-                    {{ item.classifications[0].subGenre.name }} | 
-                    {{ item.classifications[0].genre.name }} | 
-                    {{ item.classifications[0].segment.name }} | 
-                    {{ item.classifications[0].subType.name }} | 
-                    {{ item.classifications[0].type.name }}
+                    {{ item.Category }}
                   </td>
                   <td>{{ item._embedded.venues[0].name }}</td>
                   <td>

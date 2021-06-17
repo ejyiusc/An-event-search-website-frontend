@@ -35,7 +35,7 @@ export class HomePageComponent implements OnInit {
 
   
  
-  public eventsContent:any
+  public eventsContent:any = []
   public showDetails:boolean = false
   ResultsFavorites = 1; //Result or Favorite
   navChosen = 1;  // Nav bar choice
@@ -198,6 +198,8 @@ export class HomePageComponent implements OnInit {
   }
 
   requestBackendToSearch(latitude:String, longitude:String){
+    this.eventsContent = []
+
     var backendUrl = "http://127.0.0.1:8080/?"
 
     var categorySearch = this.formInfo.category
@@ -210,7 +212,7 @@ export class HomePageComponent implements OnInit {
       distanceSearch = "10"
     }
 
-    var distanceUnitSearch = this.formInfo.distance
+    var distanceUnitSearch = this.formInfo.distanceUnit
     if(distanceUnitSearch == ''){
       distanceUnitSearch = "miles"
     }
@@ -244,14 +246,51 @@ export class HomePageComponent implements OnInit {
         this.noEvents = true
       }
       else{
-        this.eventsContent = response._embedded.events.sort(this.sortFunction)
         // progress bar forwards
         this.progress = 100
         this.showProgressBarSearchingEvents = false
         this.progress = 0
         // show event table
         this.showEvents = true
-        console.log('eventsContent: ', this.eventsContent)
+
+        var eventsContentList = response._embedded.events.sort(this.sortFunction)
+        console.log("eventsContentList", eventsContentList, eventsContentList.length)
+
+        for(var index = 0; index < eventsContentList.length; ++index){
+          var eventsContent = eventsContentList[index]
+
+          var Category = ''
+          var categoryContent = []
+          if(eventsContent.hasOwnProperty('classifications')){
+            if(eventsContent.classifications[0].hasOwnProperty('subGenre') && eventsContent.classifications[0].subGenre.name != 'Undefined'){
+              categoryContent.push(eventsContent.classifications[0].subGenre.name)
+            }
+            if(eventsContent.classifications[0].hasOwnProperty('genre') && eventsContent.classifications[0].genre.name != 'Undefined'){
+              categoryContent.push(eventsContent.classifications[0].genre.name)
+            }
+            if(eventsContent.classifications[0].hasOwnProperty('segment') && eventsContent.classifications[0].segment.name != 'Undefined'){
+              categoryContent.push(eventsContent.classifications[0].segment.name)
+            }
+            if(eventsContent.classifications[0].hasOwnProperty('subType') && eventsContent.classifications[0].subType.name != 'Undefined'){
+              categoryContent.push(eventsContent.classifications[0].subType.name)
+            }
+            if(eventsContent.classifications[0].hasOwnProperty('type') && eventsContent.classifications[0].type.name != 'Undefined'){
+              categoryContent.push(eventsContent.classifications[0].type.name)
+            }
+      
+            for(var i = 0; i < categoryContent.length; ++i){
+              Category += categoryContent[i]
+              if(i != categoryContent.length - 1){
+                Category += ' | '
+              }
+            }
+          }
+          
+          eventsContent.Category = Category          
+          this.eventsContent.push(eventsContent)
+          console.log('this.eventsContent: ', this.eventsContent)
+
+        }
       }
     })
   }
@@ -381,19 +420,19 @@ export class HomePageComponent implements OnInit {
     var Category = ''
     var categoryContent = []
     if(eventsContent.hasOwnProperty('classifications')){
-      if(eventsContent.classifications[0].hasOwnProperty('subGenre')){
+      if(eventsContent.classifications[0].hasOwnProperty('subGenre') && eventsContent.classifications[0].subGenre.name != 'Undefined'){
         categoryContent.push(eventsContent.classifications[0].subGenre.name)
       }
-      if(eventsContent.classifications[0].hasOwnProperty('genre')){
+      if(eventsContent.classifications[0].hasOwnProperty('genre') && eventsContent.classifications[0].genre.name != 'Undefined'){
         categoryContent.push(eventsContent.classifications[0].genre.name)
       }
-      if(eventsContent.classifications[0].hasOwnProperty('segment')){
+      if(eventsContent.classifications[0].hasOwnProperty('segment') && eventsContent.classifications[0].segment.name != 'Undefined'){
         categoryContent.push(eventsContent.classifications[0].segment.name)
       }
-      if(eventsContent.classifications[0].hasOwnProperty('subType')){
+      if(eventsContent.classifications[0].hasOwnProperty('subType') && eventsContent.classifications[0].subType.name != 'Undefined'){
         categoryContent.push(eventsContent.classifications[0].subType.name)
       }
-      if(eventsContent.classifications[0].hasOwnProperty('type')){
+      if(eventsContent.classifications[0].hasOwnProperty('type') && eventsContent.classifications[0].type.name != 'Undefined'){
         categoryContent.push(eventsContent.classifications[0].type.name)
       }
 
