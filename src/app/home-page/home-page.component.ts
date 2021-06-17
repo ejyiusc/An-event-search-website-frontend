@@ -79,6 +79,10 @@ export class HomePageComponent implements OnInit {
   favoriteTemp:any = {}
   favoriteEventsContentForFrontend:any = []
 
+  showProgressBar = false
+  progress = 10
+  lat = 40
+  lng = 74
 
   ////////////////
 
@@ -227,6 +231,10 @@ export class HomePageComponent implements OnInit {
   getDetailsContent(eventsContent:any){
     
     console.log("index: ", eventsContent)
+
+    this.lat = parseFloat(eventsContent._embedded.venues[0].location.latitude)
+    this.lng = parseFloat(eventsContent._embedded.venues[0].location.longitude)
+    console.log("lat lng for map", this.lat, this.lng)
 
     var Venue = ''
     var VenueId = ''

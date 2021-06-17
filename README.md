@@ -1,4 +1,5 @@
 localhost:4200
+npm i @types/googlemaps@3.39.13 --save-dev
 
 # MyApp
 

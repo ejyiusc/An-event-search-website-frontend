@@ -106,6 +106,10 @@
         <span class="glyphicon glyphicon-search"></span> Clear Favorite
       </button>
 
+      <div >
+        <p><ngb-progressbar type="info" [value]="progress" [striped]="true"></ngb-progressbar></p>
+      </div>
+
 
       <!-- Result/Favorite tab -->
       <ul ngbNav #nav="ngbNav" [(activeId)]="ResultsFavorites" class="nav nav-pills">
@@ -207,6 +211,10 @@
          </tbody>
         </table>
       </div>
+
+      <!-- <agm-map [latitude]="lat" [longitude]="lng" style="height: 300px;">
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      </agm-map> -->
 
       <!-- Details -->
       <div>
@@ -353,14 +361,9 @@
             </table>
 
             <h3>My Google Maps Demo</h3>
-            <!--The div element for the map -->
-            <div id="map"></div>
-
-            <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-            <script
-              src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"
-              async
-            ></script>
+              <agm-map [latitude]="lat" [longitude]="lng" style="height: 300px;">
+                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
           </div>
 
         </div>
