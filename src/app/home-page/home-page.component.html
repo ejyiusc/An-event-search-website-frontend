@@ -104,7 +104,18 @@
           </button>
         </div>
       </div>
-
+      
+      <!-- Seat map modal -->
+      <div class="modal-dialog" *ngIf="showModal == true">
+        <div class="modal-content">
+          <div class="modal-header">Seat Map</div>
+          <div class="modal-body">
+            <img>
+          </div>
+          <div class="modal-footer"><a href="#" (click)="closeModal()">Close</a></div>
+        </div>
+      </div>
+      
       <!-- Clear Favorite button -->
       <button type="button" class="btn btn-default btn-sm" (click)="clearFavorite()">
         <span class="glyphicon glyphicon-search"></span> Clear Favorite
@@ -301,7 +312,7 @@
 
                 <tr *ngIf="detailContent.SeatMap != ''">
                   <td>Seat Map</td>
-                  <td><a href={{detailContent.SeatMap}} target="_blank">View Seat Map Here</a></td>
+                  <td><a href="#" (click)="openModal()">View Seat Map Here</a></td>
                 </tr>
                 
               </tbody>
@@ -385,3 +396,21 @@
   </body>
 
 </html>
+<style>
+  .modal {
+  display: block;
+}
+
+.modal-body:before,
+  .modal-body:after {
+    display: table;
+    content: " ";
+}
+
+.modal-header:before,
+.modal-header:after {
+  display: table;
+  content: " ";
+}
+</style>
+

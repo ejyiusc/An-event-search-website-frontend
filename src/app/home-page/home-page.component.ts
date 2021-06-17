@@ -93,9 +93,12 @@ export class HomePageComponent implements OnInit {
   showDetailsBlock = false
   // favorite
   showFavorite = false
+  // Seat map
+  showModal = false
   
 
   ////////////////
+
 
   ngOnInit() {
     this.formInfo.from = 'Here';  // Set the default choice of 'from' is "Here".
@@ -658,6 +661,14 @@ export class HomePageComponent implements OnInit {
     this.showDetailsBlock = true
     this.showEvents = false
     this.showFavorite = false
+  }
+
+  openModal(){
+    this.showModal = true
+  }
+
+  closeModal(){
+    this.showModal = false
   }
 
   // Sort events in ascending order of “date” column
