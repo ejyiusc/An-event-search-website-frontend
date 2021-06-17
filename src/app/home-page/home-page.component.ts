@@ -454,6 +454,10 @@ export class HomePageComponent implements OnInit {
     console.log("deal artist data: ", this.artistContentList)
   }
 
+  clearFavorite(){
+    localStorage.removeItem('favorite')
+  }
+
   getFavorite(){
     var favoriteContent = localStorage.getItem('favorite');  // get local storage
     if(favoriteContent == null){  // if no favorite in local storage
@@ -481,6 +485,7 @@ export class HomePageComponent implements OnInit {
       favoriteContent = '[]'
     }
     var favoriteList = JSON.parse(favoriteContent)  // change from string to list
+    console.log("previous favoriteList", favoriteList)
 
     if(index != -1){
       if(this.ResultsFavorites == 1){
@@ -490,14 +495,7 @@ export class HomePageComponent implements OnInit {
         this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
       }
     }
-    // else{
-    //   if(this.ResultsFavorites == 1){
-    //     this.currentEventsContentForDetails = this.eventsContent[index]
-    //   }
-    //   else if(this.ResultsFavorites == 2){
-    //     this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
-    //   }
-    // }
+    
     console.log("this.currentEventsContentForDetails", this.currentEventsContentForDetails)
     var deleteFlag = false
     for(var i = 0; i < favoriteList.length; ++i){
@@ -520,47 +518,7 @@ export class HomePageComponent implements OnInit {
 
     console.log("this.favoriteEventsContentForFrontend", this.favoriteEventsContentForFrontend)
     // set local storage
-    localStorage.setItem('favorite', JSON.stringify(favoriteList))
-
-    // if(index == -1){
-
-    // }
-    // console.log("setFavorite:", index, alreadyGetDetail)
-    // if(index == -1){
-    //   this.favoriteTemp.event = this.detailContent  // first tab
-    //   this.favoriteTemp.artist = this.artistContentList
-    //   this.favoriteTemp.venue = this.venueDetailContent
-    // }
-    // console.log("this.favoriteTemp: ", this.favoriteTemp)
-
-    // var favoriteContent = localStorage.getItem('favorite');  // get local storage
-    // if(favoriteContent == null){  // if no favorite in local storage
-    //   favoriteContent = '[]'
-    // }
-    // var favoriteList = JSON.parse(favoriteContent)  // change from string to list
-    
-    // var deleteFlag = false
-    // for(var i = 0; i < favoriteList.length; ++i){
-    //   if(favoriteList[i].hasOwnProperty('event') && favoriteList[i].event.Name == this.detailContent.Name){
-    //     // delete from favorite list
-    //     favoriteList.splice(i,1)
-    //     deleteFlag = true
-    //   }
-    // }
-
-    // // add 
-    // if(deleteFlag == false){
-    //   // add to favorite
-    //   favoriteList.push(this.favoriteTemp)
-    //   // clear this.favoriteTemp
-    //   this.favoriteTemp = {}
-    // }
-    // // send to front-end
-    // this.favoriteForFrontend = favoriteList
-    // console.log("this.favoriteForFrontend", this.favoriteForFrontend, this.favoriteForFrontend.length)
-    // // set local storage
-    // localStorage.setItem('favorite', JSON.stringify(favoriteList))
-    
+    localStorage.setItem('favorite', JSON.stringify(favoriteList))    
   }
 
   // Sort events in ascending order of “date” column

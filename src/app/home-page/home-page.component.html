@@ -102,6 +102,11 @@
         </div>
       </div>
 
+      <button type="button" class="btn btn-default btn-sm" (click)="clearFavorite()">
+        <span class="glyphicon glyphicon-search"></span> Clear Favorite
+      </button>
+
+
       <!-- Result/Favorite tab -->
       <ul ngbNav #nav="ngbNav" [(activeId)]="ResultsFavorites" class="nav nav-pills">
         <li [ngbNavItem]="1">
