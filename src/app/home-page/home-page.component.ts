@@ -33,8 +33,7 @@ export class HomePageComponent implements OnInit {
   options: string[] = [];  // keyword auto-complete content
   keywordControl = new FormControl();
 
-  public noEvents:boolean = false
-  public showEvents:boolean = false
+  
  
   public eventsContent:any
   public showDetails:boolean = false
@@ -79,10 +78,22 @@ export class HomePageComponent implements OnInit {
   favoriteTemp:any = {}
   favoriteEventsContentForFrontend:any = []
 
-  showProgressBar = false
-  progress = 10
   lat = 40
   lng = 74
+
+  // display flags
+  // events table
+  public noEvents:boolean = false
+  public showEvents:boolean = false
+  // progress bar
+  showProgressBarSearchingEvents = false 
+  showProgressBarLoadingDetails = false 
+  progress = 10
+  // details block
+  showDetailsBlock = false
+  // favorite
+  showFavorite = false
+  
 
   ////////////////
 
@@ -129,6 +140,10 @@ export class HomePageComponent implements OnInit {
   }
 
   doSubmit() {
+    // display progress bar
+    this.showProgressBarSearchingEvents = true
+
+    // get keyword
     this.formInfo.keyword = this.keywordControl.value;
 
     // Invalid keyword input
@@ -161,6 +176,9 @@ export class HomePageComponent implements OnInit {
     else{
       this.requestBackendToSearch(this.currentLatitude, this.currentLongitude)
     }
+
+    // progress bar forwards
+    this.progress = 30
   }
 
   requestBackendToAutoComplete(keyword:String){
@@ -207,16 +225,31 @@ export class HomePageComponent implements OnInit {
     backendUrl += "&longitude=" + longitude
     console.log("backendUrl:", backendUrl)
 
+    // progress bar forwards
+    this.progress = 50
+
     fetch(backendUrl)
     .then(response => response.json())
     .then(response => {
       console.log("events: ", response)
+      // progress bar forwards
+      this.progress = 70
       if(response.page.totalElements == 0){
         console.log("No Events")
+        // progress bar forwards
+        this.progress = 100
+        this.showProgressBarSearchingEvents = false
+        this.progress = 0
+        // show no events
         this.noEvents = true
       }
       else{
         this.eventsContent = response._embedded.events.sort(this.sortFunction)
+        // progress bar forwards
+        this.progress = 100
+        this.showProgressBarSearchingEvents = false
+        this.progress = 0
+        // show event table
         this.showEvents = true
         console.log('eventsContent: ', this.eventsContent)
       }
@@ -224,6 +257,11 @@ export class HomePageComponent implements OnInit {
   }
 
   getDetails(index:number){
+    // progress bar
+    this.progress = 10
+    this.showProgressBarLoadingDetails = true
+    this.showEvents = false
+
     this.currentEventsContentForDetails = this.eventsContent[index] // The details part displays which event content
     this.getDetailsContent(this.eventsContent[index])
   }
@@ -307,6 +345,9 @@ export class HomePageComponent implements OnInit {
         }
       })
     }
+
+    // progress bar
+    this.progress = 30
 
     // Event name
     this.detailContent['Name'] = eventsContent.name
@@ -405,6 +446,9 @@ export class HomePageComponent implements OnInit {
     console.log("this.detailContent", this.detailContent)
     console.log("this.detailContent.VenueId: ", this.detailContent.VenueId)
 
+    // progress bar
+    this.progress = 60
+
     // Twitter
     this.twitterApi = "https://twitter.com/intent/tweet?text=Check out " + this.detailContent.Name + 
                       " located at " + this.detailContent.Venue +
@@ -421,16 +465,27 @@ export class HomePageComponent implements OnInit {
       .then(response => {
         console.log("spotify: ", response)
 
+        // progress bar
+        this.progress = 70
+
         this.spotifyArtistList.push(response)
         console.log("this.spotifyArtistList: ", this.spotifyArtistList)
         if(this.spotifyArtistList.length == this.detailContent.ArtistTeamList.length-1){
           console.log("artist complete", this.spotifyArtistList)
           this.dealArtistData()
         }
+
+        // progress bar
+        this.progress = 100
+        this.showProgressBarLoadingDetails = false
+        this.progress = 0
+        // show detail table
+        this.showEvents = false
+        this.showDetailsBlock = true
+
       })
     }
   }
-// google map key AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos
   
   dealArtistData(){
     var artistContent:any = []
@@ -467,6 +522,7 @@ export class HomePageComponent implements OnInit {
   }
 
   getFavorite(){
+    this.showFavorite = true
     var favoriteContent = localStorage.getItem('favorite');  // get local storage
     if(favoriteContent == null){  // if no favorite in local storage
       favoriteContent = '[]'
@@ -479,6 +535,11 @@ export class HomePageComponent implements OnInit {
   }
 
   getDetailsFavorite(index:number){
+    // progress bar
+    this.progress = 50
+    this.showProgressBarLoadingDetails = true
+    this.showFavorite = false
+
     console.log('this.favoriteEventsContentForFrontend[index]', this.favoriteEventsContentForFrontend[index])
     this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
     this.getDetailsContent(this.favoriteEventsContentForFrontend[index])
@@ -527,6 +588,17 @@ export class HomePageComponent implements OnInit {
     console.log("this.favoriteEventsContentForFrontend", this.favoriteEventsContentForFrontend)
     // set local storage
     localStorage.setItem('favorite', JSON.stringify(favoriteList))    
+  }
+
+  goBackToList(){
+    this.showDetailsBlock = false
+    this.showEvents = true
+    this.showFavorite = true
+  }
+  goToDetails(){
+    this.showDetailsBlock = true
+    this.showEvents = false
+    this.showFavorite = false
   }
 
   // Sort events in ascending order of “date” column

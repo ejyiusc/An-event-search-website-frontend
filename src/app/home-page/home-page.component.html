@@ -9,7 +9,7 @@
   </head>
 
   <body>
-      <!-- Form area -->
+      <!--. Form area -->
       <div style="background-color: rgb(218, 218, 218);">
         <p>Entertainment Event Ticket Search</p>
         <div>
@@ -102,14 +102,10 @@
         </div>
       </div>
 
+      <!-- Clear Favorite button -->
       <button type="button" class="btn btn-default btn-sm" (click)="clearFavorite()">
         <span class="glyphicon glyphicon-search"></span> Clear Favorite
       </button>
-
-      <div >
-        <p><ngb-progressbar type="info" [value]="progress" [striped]="true"></ngb-progressbar></p>
-      </div>
-
 
       <!-- Result/Favorite tab -->
       <ul ngbNav #nav="ngbNav" [(activeId)]="ResultsFavorites" class="nav nav-pills">
@@ -120,117 +116,139 @@
           <a ngbNavLink (click)="getFavorite()">Favorites</a>
         </li>
       </ul>
-      <div>ResultsFavorites: {{ ResultsFavorites }}</div>
-      <div *ngIf="ResultsFavorites == 2">
+
+      <!-- Progress bar -->
+      <div *ngIf="showProgressBarSearchingEvents == true">
+        <p><ngb-progressbar type="info" [value]="progress" [striped]="true"></ngb-progressbar></p>
+      </div>
+
+      <div>
         <!-- Favorite -->
-        <table class="table table-hover">
-          <thead>
+        <div *ngIf="ResultsFavorites == 2 && showFavorite == true">
+          <hr>
+          <button type="button" class="btn btn-default" (click)="goToDetails()">
+            Details<span class="material-icons">chevron_right</span>
+          </button>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Event</th>
+                <th>Category</th>
+                <th>Venue Info</th>
+                <th>Favorite</th>
+              </tr>
+          </thead>
+          <tbody *ngFor="let item of favoriteEventsContentForFrontend; let i = index">
             <tr>
-              <th>#</th>
-              <th>Date</th>
-              <th>Event</th>
-              <th>Category</th>
-              <th>Venue Info</th>
-              <th>Favorite</th>
+              <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
+              <td>{{ item.dates.start.localDate }}</td>
+              <td>
+                <a href="#" ngbTooltip={{item.name}} (click)="getDetailsFavorite(i)">
+                  {{ item.name }}
+                </a>
+              </td>
+              <td>
+                {{ item.classifications[0].subGenre.name }} | 
+                {{ item.classifications[0].genre.name }} | 
+                {{ item.classifications[0].segment.name }} | 
+                {{ item.classifications[0].subType.name }} | 
+                {{ item.classifications[0].type.name }}
+              </td>
+              <td>{{ item._embedded.venues[0].name }}</td>
+              <td>
+                <a href="#" (click)="setFavorite(i, false)">
+                  <span class="material-icons">delete</span>                    
+                </a>
+              </td>
             </tr>
-         </thead>
-         <tbody *ngFor="let item of favoriteEventsContentForFrontend; let i = index">
-          <tr>
-            <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
-            <td>{{ item.dates.start.localDate }}</td>
-            <td>
-              <a href="#" ngbTooltip={{item.name}} (click)="getDetailsFavorite(i)">
-                {{ item.name }}
-              </a>
-            </td>
-            <td>
-              {{ item.classifications[0].subGenre.name }} | 
-              {{ item.classifications[0].genre.name }} | 
-              {{ item.classifications[0].segment.name }} | 
-              {{ item.classifications[0].subType.name }} | 
-              {{ item.classifications[0].type.name }}
-            </td>
-            <td>{{ item._embedded.venues[0].name }}</td>
-            <td>
-              <a href="#" (click)="setFavorite(i, false)">
-                <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
-              </a>
-            </td>
-          </tr>
-         </tbody>
-        </table>
+          </tbody>
+          </table>
+        </div>
+
+        <!-- Results -->
+        <div *ngIf="showEvents == true">
+          <div *ngIf="ResultsFavorites == 1">
+            <!-- No records -->
+            <div class="alert alert-warning" *ngIf="noEvents == true">
+              No records.
+            </div>
+
+            <!-- Events table -->
+            <div *ngIf="noEvents == false">
+              <hr>
+              <button type="button" class="btn btn-default" (click)="goToDetails()">
+                Details<span class="material-icons">chevron_right</span>
+              </button>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Category</th>
+                    <th>Venue Info</th>
+                    <th>Favorite</th>
+                  </tr>
+              </thead>
+              <tbody *ngFor="let item of eventsContent; let i = index">
+                <tr>
+                  <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
+                  <td>{{ item.dates.start.localDate }}</td>
+                  <td>
+                    <a href="#" ngbTooltip={{item.name}} (click)="getDetails(i)">
+                      {{ item.name }}
+                    </a>
+                  </td>
+                  <td>
+                    {{ item.classifications[0].subGenre.name }} | 
+                    {{ item.classifications[0].genre.name }} | 
+                    {{ item.classifications[0].segment.name }} | 
+                    {{ item.classifications[0].subType.name }} | 
+                    {{ item.classifications[0].type.name }}
+                  </td>
+                  <td>{{ item._embedded.venues[0].name }}</td>
+                  <td>
+                    <a href="#" (click)="setFavorite(i, false)">
+                      <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <!-- Search results -->
-      
-      <!-- No records -->
-      <div class="alert alert-warning" *ngIf="noEvents == true">
-        No records.
-      </div>
-
-      
-      <div *ngIf="noEvents == false && showEvents == true">
-        <hr>
-        <button type="button" class="btn btn-default btn-sm">
-          Details<span class="material-icons">arrow_forward_ios</span>
-        </button>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Date</th>
-              <th>Event</th>
-              <th>Category</th>
-              <th>Venue Info</th>
-              <th>Favorite</th>
-            </tr>
-         </thead>
-         <tbody *ngFor="let item of eventsContent; let i = index">
-          <tr>
-            <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
-            <td>{{ item.dates.start.localDate }}</td>
-            <td>
-              <a href="#" ngbTooltip={{item.name}} (click)="getDetails(i)">
-                {{ item.name }}
-              </a>
-            </td>
-            <td>
-              {{ item.classifications[0].subGenre.name }} | 
-              {{ item.classifications[0].genre.name }} | 
-              {{ item.classifications[0].segment.name }} | 
-              {{ item.classifications[0].subType.name }} | 
-              {{ item.classifications[0].type.name }}
-            </td>
-            <td>{{ item._embedded.venues[0].name }}</td>
-            <td>
-              <a href="#" (click)="setFavorite(i, false)">
-                <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
-              </a>
-            </td>
-          </tr>
-         </tbody>
-        </table>
-      </div>
-
-      <!-- <agm-map [latitude]="lat" [longitude]="lng" style="height: 300px;">
-        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-      </agm-map> -->
-
       <!-- Details -->
       <div>
-        <div>
-          <!-- Twitter button -->
-          <a class="twitter-share-button"
-            href={{twitterApi}} target="_blank">
-            <img src="https://csci571.com/hw/hw8/images/Twitter.png" style="width: 40px; height: 40px;">
-          </a>
+        <!-- progress bar -->
+        <div *ngIf="showProgressBarLoadingDetails == true">
+          <p><ngb-progressbar type="info" [value]="progress" [striped]="true"></ngb-progressbar></p>
+        </div>
 
-          <!-- Favorite button -->
-          <button type="button" class="btn btn-default">
-            <a href="#" (click)="setFavorite(-1, true)">
-              <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
+        <!-- Detail table -->
+        <div *ngIf="showDetailsBlock == true">
+          <!-- Buttons in detail page -->
+          <div>
+            <!-- Go back to list button -->
+            <button type="button" class="btn btn-default" (click)="goBackToList()">
+              <span class="material-icons">chevron_left</span>List
+            </button>
+            <!-- Twitter button -->
+            <a class="twitter-share-button"
+              href={{twitterApi}} target="_blank">
+              <img src="https://csci571.com/hw/hw8/images/Twitter.png" style="width: 40px; height: 40px;">
             </a>
-          </button>
+
+            <!-- Favorite button -->
+            <button type="button" class="btn btn-default">
+              <a href="#" (click)="setFavorite(-1, true)">
+                <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
+              </a>
+            </button>
+          </div>
 
           <!-- Nav bar -->
           <ul ngbNav #nav="ngbNav" [(activeId)]="navChosen" class="nav-tabs justify-content-end">
