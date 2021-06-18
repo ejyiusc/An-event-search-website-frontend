@@ -147,6 +147,8 @@ export class HomePageComponent implements OnInit {
     this.showEvents = false
     this.showDetailsBlock = false
 
+    this.ResultsFavorites = 1
+
     console.log("clear finished")
     console.log(this.currentEventsContentForDetails)
   }
@@ -274,6 +276,7 @@ export class HomePageComponent implements OnInit {
         this.showProgressBarSearchingEvents = false
         this.progress = 0
         // show no events
+        this.showEvents = true
         this.noEvents = true
       }
       else{
