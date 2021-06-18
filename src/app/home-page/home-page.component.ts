@@ -1,19 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import { MymodalComponent } from './mymodal/mymodal.component';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css']
+  styleUrls: ['./home-page.component.css'],
+  animations: [
+    trigger('heroState', [
+        state('inactive', style({
+            backgroundColor: '#eee',
+            transform: 'scale(1)',
+        })),
+        state('active', style({
+            backgroundColor: '#cfd8dc',
+            transform: 'scale(1.1)',
+        })),
+        transition('inactive => active', animate('100ms ease-in-out')),
+        transition('active => inactive', animate('100ms ease-out')),
+    ]),     
+]
 })
 export class HomePageComponent implements OnInit {
   
   constructor(public http: HttpClient) { }
   //////// Data
   public goChild:string = 'hellooooo'
+
+  state = 'inactive';
+  changeState() {
+      this.state = this.state === 'inactive' ? 'active' : 'inactive';
+  }
 
   public formInfo: any = {
     keyword: '',
@@ -217,7 +236,7 @@ export class HomePageComponent implements OnInit {
   }
 
   requestBackendToAutoComplete(keyword:String){
-    var backendUrl = "http://127.0.0.1:8080/autocomplete?"
+    var backendUrl = "https://nodejs-9991.wl.r.appspot.com/autocomplete?"
     backendUrl += "keyword=" + keyword
     console.log("Auto-complete backendUrl:", backendUrl)
     fetch(backendUrl)
@@ -235,7 +254,7 @@ export class HomePageComponent implements OnInit {
   requestBackendToSearch(latitude:String, longitude:String){
     this.eventsContent = []
 
-    var backendUrl = "http://127.0.0.1:8080/?"
+    var backendUrl = "https://nodejs-9991.wl.r.appspot.com/?"
 
     var categorySearch = this.formInfo.category
     if(categorySearch == ''){
@@ -373,7 +392,7 @@ export class HomePageComponent implements OnInit {
       this.detailContent.VenueId = VenueId
 
       // Search for venue details
-      var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/venueDetail?"
+      var searchVenueDetailsBackendUrl = "https://nodejs-9991.wl.r.appspot.com/venueDetail?"
       searchVenueDetailsBackendUrl += "id=" + this.detailContent.VenueId
       fetch(searchVenueDetailsBackendUrl)
       .then(response => response.json())
@@ -542,7 +561,7 @@ export class HomePageComponent implements OnInit {
     console.log("twitter api:", this.twitterApi)
 
     // Request backend to call Spotify api
-    var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/spotify?"
+    var searchVenueDetailsBackendUrl = "https://nodejs-9991.wl.r.appspot.com/spotify?"
     for(var i = 1; i < this.detailContent.ArtistTeamList.length; ++i){
       var searchArtistUrl = searchVenueDetailsBackendUrl + "artist=" + this.detailContent.ArtistTeamList[i]
       fetch(searchArtistUrl)
