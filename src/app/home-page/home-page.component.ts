@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, state, style, transition, trigger, keyframes} from '@angular/animations';
 import { MymodalComponent } from './mymodal/mymodal.component';
 
 @Component({
@@ -10,28 +10,66 @@ import { MymodalComponent } from './mymodal/mymodal.component';
   styleUrls: ['./home-page.component.css'],
   animations: [
     trigger('heroState', [
-        state('inactive', style({
-            backgroundColor: '#eee',
-            transform: 'scale(1)',
+        state('false', style({  // show
+            position:'relative', 
+            left: '0%',
         })),
-        state('active', style({
-            backgroundColor: '#cfd8dc',
-            transform: 'scale(1.1)',
+        state('true', style({   // hidden
+            position:'relative', 
+            left: '-120%',
         })),
-        transition('inactive => active', animate('100ms ease-in-out')),
-        transition('active => inactive', animate('100ms ease-out')),
-    ]),     
-]
+        transition('false => true', [  // show -> hidden
+               animate('0.5s', keyframes([
+                style({position:'relative', left: '0%', offset: 0}),
+                style({position:'relative', left: '-120%', offset: 0.8})
+               ]))
+              ]),     
+              
+        transition('true => false', [   // hidden -> show
+          animate('0.5s', keyframes([
+           style({position:'relative', left: '-120%', offset: 0}),
+           style({position:'relative', left: '0%', offset: 0.8})
+          ]))
+         ]),
+    ]),
+    trigger('rightState', [
+      state('false', style({  // show
+          position:'relative', 
+          left: '0%',
+          backgroundColor: '#eee',
+      })),
+      state('true', style({   // hidden
+          position:'relative', 
+          left: '120%',
+          backgroundColor: '#eee',
+      })),
+      transition('false => true', [  // show -> hidden
+             animate('0.5s', keyframes([
+              style({position:'relative', left: '0%', offset: 0}),
+              style({position:'relative', left: '120%', offset: 0.8})
+             ]))
+            ]),     
+            
+      transition('true => false', [   // hidden -> show
+        animate('0.5s', keyframes([
+         style({position:'relative', left: '120%', offset: 0}),
+         style({position:'relative', left: '0%', offset: 0.8})
+        ]))
+       ]),
+  ]),
+  ],
 })
 export class HomePageComponent implements OnInit {
   
   constructor(public http: HttpClient) { }
   //////// Data
-  public goChild:string = 'hellooooo'
+  show:boolean = true
 
-  state = 'inactive';
+  public goChild:string = 'hellooooo'  //seat map url
+
+  state = false;   // hidden = true
   changeState() {
-      this.state = this.state === 'inactive' ? 'active' : 'inactive';
+    this.state = !this.state;
   }
 
   public formInfo: any = {
@@ -118,6 +156,11 @@ export class HomePageComponent implements OnInit {
   showModal = false
 
   noArtists = false
+
+  // animation
+  resultTableAnimation = ''
+  detailAnimation = ''
+  favoriteAnimation = false
   
 
   ////////////////
@@ -306,6 +349,7 @@ export class HomePageComponent implements OnInit {
         this.showProgressBarSearchingEvents = false
         this.progress = 0
         // show event table
+        this.resultTableAnimation = 'false'
         this.showEvents = true
 
         var eventsContentList = response._embedded.events.sort(this.sortFunction)
@@ -364,6 +408,9 @@ export class HomePageComponent implements OnInit {
     this.progress = 10
     this.showProgressBarLoadingDetails = true
     this.showEvents = false
+
+    this.detailAnimation = 'false'
+    this.resultTableAnimation = 'true'
 
     this.currentEventsContentForDetails = this.eventsContent[index] // The details part displays which event content
     this.getDetailsContent(this.eventsContent[index])
@@ -711,12 +758,21 @@ export class HomePageComponent implements OnInit {
     this.showDetailsBlock = false
     this.showEvents = true
     this.showFavorite = true
+
+    // animation
+    this.resultTableAnimation = 'false'  // show result table
+    this.detailAnimation = 'true'  // hide detail
   }
 
   goToDetails(){
     this.showDetailsBlock = true
     this.showEvents = false
     this.showFavorite = false
+
+    // animation
+    this.resultTableAnimation = 'true'  // hide result table
+    this.detailAnimation = 'false'  // show detail
+
   }
 
   // Sort events in ascending order of “date” column
