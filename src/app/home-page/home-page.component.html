@@ -239,6 +239,7 @@
 
         <!-- Detail table -->
         <div *ngIf="showDetailsBlock == true">
+          <hr>
           <!-- Buttons in detail page -->
           <div>
             <!-- Go back to list button -->
@@ -292,7 +293,7 @@
 
                 <tr *ngIf="detailContent.Time != ''">
                   <td>Time</td>
-                  <td>{{ detailContent.Time }}</td>
+                  <td>{{ detailContent.Time | date }}</td>
                 </tr>
 
                 <tr *ngIf="detailContent.Category != ''">
@@ -341,7 +342,7 @@
                   <td>Name</td><td>{{item.Name}}</td>
                 </tr>
                 <tr>
-                  <td>Followers</td><td>{{item.Followers}}</td>
+                  <td>Followers</td><td>{{item.Followers | number }}</td>
                 </tr>
                 <tr>
                   <td>Popularity</td>
