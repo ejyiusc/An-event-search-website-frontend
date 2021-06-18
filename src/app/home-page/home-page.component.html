@@ -3,9 +3,6 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
 
@@ -13,7 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
 
       <!--. Form area -->
       <div style="background-color: rgb(218, 218, 218);">
@@ -108,17 +104,6 @@
           <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">
             <span class="glyphicon glyphicon-search"></span> Clear
           </button>
-        </div>
-      </div>
-      
-      <!-- Seat map modal -->
-      <div class="modal-dialog" *ngIf="showModal == true">
-        <div class="modal-content">
-          <div class="modal-header">Seat Map</div>
-          <div class="modal-body">
-            <img>
-          </div>
-          <div class="modal-footer"><a href="#" (click)="closeModal()">Close</a></div>
         </div>
       </div>
       
@@ -326,7 +311,7 @@
 
                 <tr *ngIf="detailContent.SeatMap != ''">
                   <td>Seat Map</td>
-                  <td><a href="#" (click)="openModal()">View Seat Map Here</a></td>
+                  <td><app-mymodal [fromParentData]='goChild' [Data]='123'></app-mymodal></td>
                 </tr>
                 
               </tbody>
@@ -418,22 +403,6 @@
 
 </html>
 <style>
-  .modal {
-  display: block;
-}
-
-.modal-body:before,
-  .modal-body:after {
-    display: table;
-    content: " ";
-}
-
-.modal-header:before,
-.modal-header:after {
-  display: table;
-  content: " ";
-}
-
-a:hover{cursor: pointer;}
+  a:hover{cursor: pointer;}
 </style>
 

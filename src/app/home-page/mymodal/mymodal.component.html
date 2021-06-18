@@ -1,0 +1,22 @@
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Seat map</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <p>Hello, World!
+        {{fromParentData}}
+      </p> -->
+      <img src={{fromParentData}} style="width: 500px; height: 400px;">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">ok</button>
+    </div>
+  </ng-template>
+  
+  <a (click)="open(content)" style="color: blue;">View seatmap here</a>
+  <style>
+    a:hover{cursor: pointer;}
+  </style>

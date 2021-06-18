@@ -15,11 +15,13 @@ import { AgmCoreModule } from '@agm/core';
 import {ModalModule} from 'ngx-bootstrap/modal';
 
 import { AppComponent } from './app.component';
+import { MymodalComponent } from './home-page/mymodal/mymodal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomePageComponent
+    HomePageComponent,
+    MymodalComponent,
   ],
   imports: [
     BrowserModule,

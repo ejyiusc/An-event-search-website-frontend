@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 
+import { MymodalComponent } from './mymodal/mymodal.component';
+
 @Component({
   selector: 'home-page',
   templateUrl: './home-page.component.html',
@@ -11,6 +13,8 @@ export class HomePageComponent implements OnInit {
   
   constructor(public http: HttpClient) { }
   //////// Data
+  public goChild:string = 'hellooooo'
+
   public formInfo: any = {
     keyword: '',
     category: '',
@@ -518,7 +522,8 @@ export class HomePageComponent implements OnInit {
     var SeatMap = ''
     if(eventsContent.hasOwnProperty('seatmap') && 
       eventsContent.seatmap.hasOwnProperty('staticUrl')){
-        SeatMap += eventsContent.url
+        SeatMap += eventsContent.seatmap.staticUrl
+        this.goChild = SeatMap
     }
     if(SeatMap != ''){
       this.detailContent.SeatMap = SeatMap
@@ -688,18 +693,11 @@ export class HomePageComponent implements OnInit {
     this.showEvents = true
     this.showFavorite = true
   }
+
   goToDetails(){
     this.showDetailsBlock = true
     this.showEvents = false
     this.showFavorite = false
-  }
-
-  openModal(){
-    this.showModal = true
-  }
-
-  closeModal(){
-    this.showModal = false
   }
 
   // Sort events in ascending order of “date” column
