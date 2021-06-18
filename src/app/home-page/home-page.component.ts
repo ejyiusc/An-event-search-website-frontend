@@ -133,7 +133,7 @@ export class HomePageComponent implements OnInit {
   }
 
   clearForm(){
-    this.keywordControl = new FormControl();
+    this.keywordControl.reset('');
     this.formInfo.category = ''
     this.formInfo.distance = ''
     this.formInfo.distanceUnit = ''
@@ -143,6 +143,10 @@ export class HomePageComponent implements OnInit {
     this.keywordInvalid = false
     this.locationInvalid = false
     this.noEvents = false
+
+    this.showEvents = false
+    this.showDetailsBlock = false
+
     console.log("clear finished")
     console.log(this.currentEventsContentForDetails)
   }
