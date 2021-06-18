@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 
 import {RoundProgressModule} from 'angular-svg-round-progressbar';
 import { AgmCoreModule } from '@agm/core';
+import {ModalModule} from 'ngx-bootstrap/modal';
 
 import { AppComponent } from './app.component';
 
@@ -34,7 +35,8 @@ import { AppComponent } from './app.component';
     RoundProgressModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDRm6eke0AgBCdf-4QGRrYOhktzb4y8Jos'
-    })
+    }),
+    ModalModule.forRoot()
 
   ],
   providers: [

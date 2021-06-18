@@ -174,7 +174,7 @@
               </td>
               <td>{{ item._embedded.venues[0].name }}</td>
               <td>
-                <a href="#" (click)="setFavorite(i, false)">
+                <a (click)="setFavorite(i, false)">
                   <span class="material-icons">delete</span>                    
                 </a>
               </td>
@@ -225,9 +225,9 @@
                   </td>
                   <td>{{ item._embedded.venues[0].name }}</td>
                   <td>
-                    <a href="#" (click)="setFavorite(i, false)">
-                      <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
-                      <span class="material-icons" style=" color: yellow;">star</span>
+                    <a (click)="setFavorite(i, false)">
+                      <span class="material-icons" *ngIf="item.Favorite == false">star_outline</span>
+                      <span class="material-icons" *ngIf="item.Favorite == true" style=" color: yellow;">star</span>
                     </a>
                   </td>
                 </tr>
@@ -262,8 +262,8 @@
             <!-- Favorite button -->
             <button type="button" class="btn btn-default">
               <a href="#" (click)="setFavorite(-1, true)">
-                <span class="glyphicon glyphicon-star-empty" style="color: black;"></span>
-                <span class="material-icons" style=" color: yellow;">star</span>
+                <span class="material-icons" *ngIf="currentEventsContentForDetails.Favorite == false">star_outline</span>
+                <span class="material-icons" *ngIf="currentEventsContentForDetails.Favorite == true" style=" color: yellow;">star</span>
               </a>
             </button>
           </div>
@@ -405,7 +405,7 @@
               </tbody>
             </table>
 
-            <h3>My Google Maps Demo</h3>
+            <!-- <h3>My Google Maps Demo</h3> -->
               <agm-map [latitude]="lat" [longitude]="lng" style="height: 300px;">
                 <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
             </agm-map>
@@ -433,5 +433,7 @@
   display: table;
   content: " ";
 }
+
+a:hover{cursor: pointer;}
 </style>
 

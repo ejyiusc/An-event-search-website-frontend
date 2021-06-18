@@ -32,8 +32,6 @@ export class HomePageComponent implements OnInit {
   // Keyword auto-complete
   options: string[] = [];  // keyword auto-complete content
   keywordControl = new FormControl();
-
-  
  
   public eventsContent:any = []
   public showDetails:boolean = false
@@ -290,6 +288,8 @@ export class HomePageComponent implements OnInit {
         var eventsContentList = response._embedded.events.sort(this.sortFunction)
         console.log("eventsContentList", eventsContentList, eventsContentList.length)
 
+        this.getFavorite()
+
         for(var index = 0; index < eventsContentList.length; ++index){
           var eventsContent = eventsContentList[index]
 
@@ -319,8 +319,15 @@ export class HomePageComponent implements OnInit {
               }
             }
           }
-          
-          eventsContent.Category = Category          
+          eventsContent.Category = Category
+          eventsContent.Favorite = false
+
+          for(var j = 0; j < this.favoriteEventsContentForFrontend.length; ++j){
+            if(eventsContent.name == this.favoriteEventsContentForFrontend[j].name){
+              eventsContent.Favorite = true
+            }
+          }
+                  
           this.eventsContent.push(eventsContent)
           console.log('this.eventsContent: ', this.eventsContent)
 
@@ -621,7 +628,6 @@ export class HomePageComponent implements OnInit {
 
   setFavorite(index:number, alreadyGetDetail:boolean){
     console.log("setFavorite:", index, alreadyGetDetail)
-    // localStorage.removeItem('favorite');
     var favoriteContent = localStorage.getItem('favorite');  // get local storage
     if(favoriteContent == null){  // if no favorite in local storage
       favoriteContent = '[]'
@@ -631,10 +637,24 @@ export class HomePageComponent implements OnInit {
 
     if(index != -1){
       if(this.ResultsFavorites == 1){
+        if(this.eventsContent[index].Favorite == true){
+          this.eventsContent[index].Favorite = false
+        }
+        else{
+          this.eventsContent[index].Favorite = true
+        }
         this.currentEventsContentForDetails = this.eventsContent[index]
       }
       else if(this.ResultsFavorites == 2){
         this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
+      }
+    }
+    else{
+      if(this.currentEventsContentForDetails.Favorite == true){
+        this.currentEventsContentForDetails.Favorite = false
+      }
+      else{
+        this.currentEventsContentForDetails.Favorite = true
       }
     }
     
