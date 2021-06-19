@@ -412,11 +412,9 @@ export class HomePageComponent implements OnInit {
     this.showProgressBarLoadingDetails = true
     this.showEvents = false
 
-    
-    this.resultTableAnimation = 'true'
-
     this.currentEventsContentForDetails = this.eventsContent[index] // The details part displays which event content
     this.getDetailsContent(this.eventsContent[index])
+    this.resultTableAnimation = 'true'
   }
 
   getDetailsContent(eventsContent:any){
@@ -426,6 +424,20 @@ export class HomePageComponent implements OnInit {
     this.lat = parseFloat(eventsContent._embedded.venues[0].location.latitude)
     this.lng = parseFloat(eventsContent._embedded.venues[0].location.longitude)
     console.log("lat lng for map", this.lat, this.lng)
+
+    this.detailContent = {
+      ArtistTeam: '',
+      ArtistTeamList: [''],
+      Venue: '',
+      VenueId: '',
+      Time: '',
+      Category: '',
+      PriceRange: '',
+      TicketStatus: '',
+      BuyTicketAt: '',
+      SeatMap: '',
+      Name: '',
+    }
 
     var Venue = ''
     var VenueId = ''
@@ -443,58 +455,75 @@ export class HomePageComponent implements OnInit {
 
       // Search for venue details
       var searchVenueDetailsBackendUrl = "https://nodejs-9991.wl.r.appspot.com/venueDetail?"
-      searchVenueDetailsBackendUrl += "id=" + this.detailContent.VenueId
+      // var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/venueDetail?"
+      searchVenueDetailsBackendUrl += "keyword=" + this.detailContent.Venue
+      console.log("searchVenueDetailsBackendUrl", searchVenueDetailsBackendUrl)
       fetch(searchVenueDetailsBackendUrl)
       .then(response => response.json())
       .then(response => {
         console.log("venue details: ", response)
 
+        this.venueDetailContent = {
+          Address: '',
+          City: '',
+          PhoneNumber: '',
+          OpenHours: '',
+          GeneralRule: '',
+          ChildRule: '',
+        }
+        this.artistContentList = []
+
         if(response.hasOwnProperty('venues') && 
           response.venues.length > 0){
-            // Address
-            if(response.venues[0].hasOwnProperty('address')){
-              if(response.venues[0].address.hasOwnProperty('line1')){
-                this.venueDetailContent.Address = response.venues[0].address.line1
+            for(var k = 0; k < response.venues.length; ++k){
+              if(response.venues[k].name != this.detailContent.Venue){
+                continue
               }
+              // Address
+              if(response.venues[k].hasOwnProperty('address')){
+                if(response.venues[k].address.hasOwnProperty('line1')){
+                  this.venueDetailContent.Address = response.venues[k].address.line1
+                }
+              }
+
+              // City
+              if(response.venues[k].hasOwnProperty('city')){
+                if(response.venues[k].city.hasOwnProperty('name')){
+                  this.venueDetailContent.City = response.venues[k].city.name
+                }
+              }
+
+              if(response.venues[k].hasOwnProperty('state')){
+                if(response.venues[k].city.hasOwnProperty('name')){
+                  this.venueDetailContent.City += ', ' + response.venues[k].state.name
+                }
+              }
+
+              if(response.venues[k].hasOwnProperty('boxOfficeInfo')){
+                // Phone Number
+                if(response.venues[k].boxOfficeInfo.hasOwnProperty('phoneNumberDetail')){
+                  this.venueDetailContent.PhoneNumber = response.venues[k].boxOfficeInfo.phoneNumberDetail
+                }
+
+                // Open hours
+                if(response.venues[k].boxOfficeInfo.hasOwnProperty('openHoursDetail')){
+                  this.venueDetailContent.OpenHours = response.venues[k].boxOfficeInfo.openHoursDetail
+                }
+              }
+
+              if(response.venues[k].hasOwnProperty('generalInfo')){
+                // General Rule
+                if(response.venues[k].generalInfo.hasOwnProperty('generalRule')){
+                  this.venueDetailContent.GeneralRule = response.venues[k].generalInfo.generalRule
+                }
+
+                // Child Rule
+                if(response.venues[k].generalInfo.hasOwnProperty('childRule')){
+                  this.venueDetailContent.ChildRule = response.venues[k].generalInfo.childRule
+                }
+              }
+              console.log("this.venueDetailContent", this.venueDetailContent)
             }
-
-            // City
-            if(response.venues[0].hasOwnProperty('city')){
-              if(response.venues[0].city.hasOwnProperty('name')){
-                this.venueDetailContent.City = response.venues[0].city.name
-              }
-            }
-
-            if(response.venues[0].hasOwnProperty('state')){
-              if(response.venues[0].city.hasOwnProperty('name')){
-                this.venueDetailContent.City += ', ' + response.venues[0].state.name
-              }
-            }
-
-            if(response.venues[0].hasOwnProperty('boxOfficeInfo')){
-              // Phone Number
-              if(response.venues[0].boxOfficeInfo.hasOwnProperty('phoneNumberDetail')){
-                this.venueDetailContent.PhoneNumber = response.venues[0].boxOfficeInfo.phoneNumberDetail
-              }
-
-              // Open hours
-              if(response.venues[0].boxOfficeInfo.hasOwnProperty('openHoursDetail')){
-                this.venueDetailContent.OpenHours = response.venues[0].boxOfficeInfo.openHoursDetail
-              }
-            }
-
-            if(response.venues[0].hasOwnProperty('generalInfo')){
-              // General Rule
-              if(response.venues[0].generalInfo.hasOwnProperty('generalRule')){
-                this.venueDetailContent.GeneralRule = response.venues[0].generalInfo.generalRule
-              }
-
-              // Child Rule
-              if(response.venues[0].generalInfo.hasOwnProperty('childRule')){
-                this.venueDetailContent.ChildRule = response.venues[0].generalInfo.childRule
-              }
-            }
-          console.log("this.venueDetailContent", this.venueDetailContent)
         }
 
         this.detailAnimation = 'false'
@@ -618,8 +647,20 @@ export class HomePageComponent implements OnInit {
 
     // Request backend to call Spotify api
     var searchVenueDetailsBackendUrl = "https://nodejs-9991.wl.r.appspot.com/spotify?"
+    // var searchVenueDetailsBackendUrl = "http://127.0.0.1:8080/spotify?"
     this.spotifyArtistList = []
-    for(var i = 0; i < this.detailContent.ArtistTeamList.length; ++i){
+    if(this.detailContent.ArtistTeamList.length == 0){
+      // progress bar
+      this.progress = 100
+      this.showProgressBarLoadingDetails = false
+      this.progress = 0
+      // show detail table
+      this.showEvents = false
+      this.showDetailsBlock = true
+
+    }
+    else{
+      for(var i = 0; i < this.detailContent.ArtistTeamList.length; ++i){
       var searchArtistUrl = searchVenueDetailsBackendUrl + "artist=" + this.detailContent.ArtistTeamList[i]
       fetch(searchArtistUrl)
       .then(response => response.json())
@@ -645,10 +686,13 @@ export class HomePageComponent implements OnInit {
 
       })
     }
+    }
+    
   }
   
   dealArtistData(){
     console.log("deal artist data func")
+    this.artistContentList = []
     var artistContent:any = []
     // this.detailContent.ArtistTeamList.splice(0, 1)
     for(var i = 0; i < this.spotifyArtistList.length; ++i){
