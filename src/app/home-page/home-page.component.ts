@@ -218,7 +218,9 @@ export class HomePageComponent implements OnInit {
     console.log("clear finished")
     console.log(this.currentEventsContentForDetails)
   }
-
+  clearLocationInput(){
+    this.formInfo.fromLocation == ''
+  }
   checkForm(){
     this.keywordInvalid = false;
     this.locationInvalid = false;
@@ -229,12 +231,28 @@ export class HomePageComponent implements OnInit {
     if(this.formInfo.keyword == null || this.formInfo.keyword ==''){
       this.keywordInvalid = true;
     }
+    for(let char of this.formInfo.keyword){
+      if(char != ' '){
+        break
+      }
+      this.keywordInvalid = true;
+    }
+    console.log("this.formInfo.from", this.formInfo.from)
+    if(this.formInfo.from == 'Here'){
+      this.formInfo.fromLocation == ''
+    }
 
     if(this.formInfo.from == 'Other'){
       if(this.formInfo.fromLocation == ''){
         // Invalid location input when choose other
         this.locationInvalid = true;
       }
+      for(let char of this.formInfo.fromLocation){
+        if(char != ' '){
+          break
+        }
+        this.locationInvalid = true;
+      }      
     }
   }
 
@@ -673,7 +691,7 @@ export class HomePageComponent implements OnInit {
         console.log("this.spotifyArtistList: ", this.spotifyArtistList)
         if(this.spotifyArtistList.length == this.detailContent.ArtistTeamList.length){
           console.log("artist complete", this.spotifyArtistList)
-          this.dealArtistData()
+          this.dealArtistData(Category)
         }
 
         // progress bar
@@ -690,7 +708,7 @@ export class HomePageComponent implements OnInit {
     
   }
   
-  dealArtistData(){
+  dealArtistData(Category:String){
     console.log("deal artist data func")
     this.artistContentList = []
     var artistContent:any = []
@@ -710,13 +728,22 @@ export class HomePageComponent implements OnInit {
               artistContent.push({Name:artistName,
                                   Followers: this.spotifyArtistList[i].artists.items[j].followers.total,
                                   Popularity: this.spotifyArtistList[i].artists.items[j].popularity,
-                                  CheckAt: this.spotifyArtistList[i].artists.items[j].external_urls.spotify
+                                  CheckAt: this.spotifyArtistList[i].artists.items[j].external_urls.spotify,
+                                  NoDetails:false
                                 })
               break
             }
           }
         }
       } 
+    }
+    console.log("**this.detailContent.ArtistTeamList", this.detailContent.ArtistTeamList, Category)
+    if(this.detailContent.ArtistTeamList.length != 0 && 
+      (Category.indexOf('Music') != -1 || Category.indexOf('Arts & Theatre') != -1)){
+      for(var m = 0; m < this.detailContent.ArtistTeamList.length; ++m){
+        artistContent.push({Name: this.detailContent.ArtistTeamList[m],
+                            NoDetails: true})
+      }
     }
     this.artistContentList = artistContent
     console.log("deal artist data: ", this.artistContentList)
