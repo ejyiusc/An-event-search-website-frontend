@@ -156,6 +156,7 @@ export class HomePageComponent implements OnInit {
   showModal = false
 
   noArtists = false
+  noFavorite = false
 
   // animation
   resultTableAnimation = ''
@@ -679,17 +680,14 @@ export class HomePageComponent implements OnInit {
   }
 
   clickResult(){
-    this.favoriteAnimation = true  // hide favorite
-    this.resultTableAnimation = 'false'  // show result
+    // this.favoriteAnimation = true  // hide favorite
+    // this.resultTableAnimation = 'false'  // show result
+    this.goBackToList()
   }
 
-  // clickFavorite(){
-  //   this.favoriteAnimation = false  // show favorite
-  //   this.resultTableAnimation = 'true'  // hide result
-  //   this.getFavorite()
-  // }
-
   getFavorite(){
+    this.goBackToList()
+
     this.showFavorite = true
     var favoriteContent = localStorage.getItem('favorite');  // get local storage
     if(favoriteContent == null){  // if no favorite in local storage
@@ -700,6 +698,7 @@ export class HomePageComponent implements OnInit {
       favoriteList.splice(0,1)
     }
     this.favoriteEventsContentForFrontend = favoriteList
+    console.log("this.favoriteEventsContentForFrontend", this.favoriteEventsContentForFrontend)
   }
 
   getDetailsFavorite(index:number){
@@ -713,6 +712,24 @@ export class HomePageComponent implements OnInit {
     this.getDetailsContent(this.favoriteEventsContentForFrontend[index])
     this.favoriteAnimation = true
     
+  }
+
+  deleteFavorite(index:number, alreadyGetDetail:boolean){
+    var eventToDelete = this.favoriteEventsContentForFrontend[index]
+    this.favoriteEventsContentForFrontend.splice(index,1)   // delete from favorite table
+    // set local storage
+    localStorage.setItem('favorite', JSON.stringify(this.favoriteEventsContentForFrontend))
+
+    console.log("eventToDelete", eventToDelete)
+    for(var j = 0; j < this.eventsContent.length; ++j){
+      if(eventToDelete.name == this.eventsContent[j].name &&
+        eventToDelete.dates.start.localDate == this.eventsContent[j].dates.start.localDate){
+          console.log("this.eventsContent[j]", this.eventsContent[j], j)
+          this.eventsContent[j].Favorite = false
+          break
+        }
+    }
+
   }
 
   setFavorite(index:number, alreadyGetDetail:boolean){
@@ -741,10 +758,19 @@ export class HomePageComponent implements OnInit {
     else{
       if(this.currentEventsContentForDetails.Favorite == true){
         this.currentEventsContentForDetails.Favorite = false
+
+        for(var j = 0; j < this.eventsContent.length; ++j){
+          if(this.currentEventsContentForDetails.name == this.eventsContent[j].name &&
+            this.currentEventsContentForDetails.dates.start.localDate == this.eventsContent[j].dates.start.localDate){
+              console.log("this.eventsContent[j]", this.eventsContent[j], j)
+              this.eventsContent[j].Favorite = false
+              break
+            }
+        }
       }
       else{
         this.currentEventsContentForDetails.Favorite = true
-      }
+      }this.currentEventsContentForDetails
     }
     
     console.log("this.currentEventsContentForDetails", this.currentEventsContentForDetails)

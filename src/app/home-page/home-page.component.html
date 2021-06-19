@@ -117,7 +117,7 @@
       <!-- Result/Favorite tab -->
       <ul ngbNav #nav="ngbNav" [(activeId)]="ResultsFavorites" class="nav nav-pills">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>Results</a>
+          <a ngbNavLink (click)="clickResult()">Results</a>
         </li>
         <li [ngbNavItem]="2">
           <a ngbNavLink (click)="getFavorite()">Favorites</a>
@@ -132,43 +132,52 @@
       <div>
         <!-- Favorite -->
         <div [@rightState]="favoriteAnimation">
-          <div *ngIf="ResultsFavorites == 2 && showFavorite == true">
-            <hr>
-            <button type="button" class="btn btn-default" (click)="goToDetails()">
-              Details<span class="material-icons">chevron_right</span>
-            </button>
-            <table class="table table-hover">
-              <thead>
+          <div *ngIf="ResultsFavorites == 2 && showFavorite == true ">
+            <!-- no favorite -->
+            <div *ngIf="favoriteEventsContentForFrontend?.length == 0">
+              <div class="alert alert-warning">
+                No records.
+              </div>
+            </div>
+            <!-- has favorite -->
+            <div *ngIf="favoriteEventsContentForFrontend?.length != 0">
+              <hr>
+              <button type="button" class="btn btn-default" (click)="goToDetails()">
+                Details<span class="material-icons">chevron_right</span>
+              </button>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Category</th>
+                    <th>Venue Info</th>
+                    <th>Favorite</th>
+                  </tr>
+              </thead>
+              <tbody *ngFor="let item of favoriteEventsContentForFrontend; let i = index">
                 <tr>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Event</th>
-                  <th>Category</th>
-                  <th>Venue Info</th>
-                  <th>Favorite</th>
+                  <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
+                  <td>{{ item.dates.start.localDate }}</td>
+                  <td>
+                    <a href="#" ngbTooltip={{item.name}} (click)="getDetailsFavorite(i)">
+                      {{ item.name }}
+                    </a>
+                  </td>
+                  <td>
+                    {{ item.Category }}
+                  </td>
+                  <td>{{ item._embedded.venues[0].name }}</td>
+                  <td>
+                    <a (click)="deleteFavorite(i, false)">
+                      <span class="material-icons">delete</span>                    
+                    </a>
+                  </td>
                 </tr>
-            </thead>
-            <tbody *ngFor="let item of favoriteEventsContentForFrontend; let i = index">
-              <tr>
-                <td>{{ i+1 }}</td>  <!-- Index starts from 1 -->
-                <td>{{ item.dates.start.localDate }}</td>
-                <td>
-                  <a href="#" ngbTooltip={{item.name}} (click)="getDetailsFavorite(i)">
-                    {{ item.name }}
-                  </a>
-                </td>
-                <td>
-                  {{ item.Category }}
-                </td>
-                <td>{{ item._embedded.venues[0].name }}</td>
-                <td>
-                  <a (click)="setFavorite(i, false)">
-                    <span class="material-icons">delete</span>                    
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-            </table>
+              </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
