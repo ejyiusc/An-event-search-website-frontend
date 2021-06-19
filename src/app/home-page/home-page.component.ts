@@ -46,14 +46,14 @@ import { MymodalComponent } from './mymodal/mymodal.component';
       transition('false => true', [  // show -> hidden
              animate('0.5s', keyframes([
               style({position:'relative', left: '0%', offset: 0}),
-              style({position:'relative', left: '120%', offset: 0.8})
+              style({position:'relative', left: '120%', offset: 1})
              ]))
             ]),     
             
       transition('true => false', [   // hidden -> show
         animate('0.5s', keyframes([
          style({position:'relative', left: '120%', offset: 0}),
-         style({position:'relative', left: '0%', offset: 0.8})
+         style({position:'relative', left: '0%', offset: 1})
         ]))
        ]),
   ]),
@@ -159,7 +159,7 @@ export class HomePageComponent implements OnInit {
 
   // animation
   resultTableAnimation = ''
-  detailAnimation = ''
+  detailAnimation = 'true'
   favoriteAnimation = false
   
 
@@ -167,6 +167,7 @@ export class HomePageComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log("this.detailAnimation", this.detailAnimation)
     this.formInfo.from = 'Here';  // Set the default choice of 'from' is "Here".
 
     // Get current location
@@ -212,6 +213,8 @@ export class HomePageComponent implements OnInit {
     this.showDetailsBlock = false
 
     this.ResultsFavorites = 1
+
+    this.detailAnimation = 'true'
 
     console.log("clear finished")
     console.log(this.currentEventsContentForDetails)
@@ -409,7 +412,7 @@ export class HomePageComponent implements OnInit {
     this.showProgressBarLoadingDetails = true
     this.showEvents = false
 
-    this.detailAnimation = 'false'
+    
     this.resultTableAnimation = 'true'
 
     this.currentEventsContentForDetails = this.eventsContent[index] // The details part displays which event content
@@ -493,6 +496,9 @@ export class HomePageComponent implements OnInit {
             }
           console.log("this.venueDetailContent", this.venueDetailContent)
         }
+
+        this.detailAnimation = 'false'
+        console.log("this.detailAnimation", this.detailAnimation)
       })
     }
 
@@ -672,6 +678,17 @@ export class HomePageComponent implements OnInit {
     localStorage.removeItem('favorite')
   }
 
+  clickResult(){
+    this.favoriteAnimation = true  // hide favorite
+    this.resultTableAnimation = 'false'  // show result
+  }
+
+  // clickFavorite(){
+  //   this.favoriteAnimation = false  // show favorite
+  //   this.resultTableAnimation = 'true'  // hide result
+  //   this.getFavorite()
+  // }
+
   getFavorite(){
     this.showFavorite = true
     var favoriteContent = localStorage.getItem('favorite');  // get local storage
@@ -694,6 +711,7 @@ export class HomePageComponent implements OnInit {
     console.log('this.favoriteEventsContentForFrontend[index]', this.favoriteEventsContentForFrontend[index])
     this.currentEventsContentForDetails = this.favoriteEventsContentForFrontend[index]
     this.getDetailsContent(this.favoriteEventsContentForFrontend[index])
+    this.favoriteAnimation = true
     
   }
 
@@ -762,6 +780,8 @@ export class HomePageComponent implements OnInit {
     // animation
     this.resultTableAnimation = 'false'  // show result table
     this.detailAnimation = 'true'  // hide detail
+    console.log("this.detailAnimation", this.detailAnimation)
+    this.favoriteAnimation = false
   }
 
   goToDetails(){
@@ -772,6 +792,8 @@ export class HomePageComponent implements OnInit {
     // animation
     this.resultTableAnimation = 'true'  // hide result table
     this.detailAnimation = 'false'  // show detail
+    console.log("this.detailAnimation", this.detailAnimation)
+    this.favoriteAnimation = true
 
   }
 
