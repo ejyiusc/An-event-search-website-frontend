@@ -302,6 +302,7 @@ export class HomePageComponent implements OnInit {
     this.eventsContent = []
 
     var backendUrl = "https://nodejs-9991.wl.r.appspot.com/?"
+    // var backendUrl = "http://127.0.0.1:8080/?"
 
     var categorySearch = this.formInfo.category
     if(categorySearch == ''){
@@ -770,13 +771,16 @@ export class HomePageComponent implements OnInit {
       }
       else{
         this.currentEventsContentForDetails.Favorite = true
-      }this.currentEventsContentForDetails
+      }
     }
     
     console.log("this.currentEventsContentForDetails", this.currentEventsContentForDetails)
     var deleteFlag = false
     for(var i = 0; i < favoriteList.length; ++i){
-      if(favoriteList[i] != null && favoriteList[i].hasOwnProperty('name') && favoriteList[i].name == this.currentEventsContentForDetails.name){
+      if(favoriteList[i] != null && 
+        favoriteList[i].hasOwnProperty('name') && 
+        favoriteList[i].name == this.currentEventsContentForDetails.name && 
+        favoriteList[i].dates.start.localDate == this.currentEventsContentForDetails.dates.start.localDate){
         // delete from favorite list
         favoriteList.splice(i,1)
         deleteFlag = true
