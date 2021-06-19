@@ -1,0 +1,121 @@
+#formArea{
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.keywordTitle{
+    display:inline;
+    margin-left: 15%;
+}
+
+.keywordForm{
+    display:inline;
+    margin-left: 2%;
+}
+
+#keywordErrorInfo{
+    margin-left: 15%;
+}
+
+.keywordInput{
+    width: 350px;
+    display: inline;
+}
+
+.distanceInput{
+    width: 150px;
+    display: inline;
+    margin-left: 3%;
+}
+
+#keywordInputError{
+    width: 350px;
+    display: inline;
+}
+
+#categoryDropdown{
+    width: 150px;
+    display: inline;
+    margin-left: 3%;
+}
+
+#distanceUnitDropdown{
+    width: 150px;
+    display: inline;
+}
+
+.radioFirst{
+    display: inline;
+    margin-left: 6%;
+}
+
+.radioSecond{
+    margin-left: 27%;
+}
+
+.locationInput{
+    margin-left: 27%;
+    width: 350px;
+}
+
+/* phone */
+@media screen and (max-width: 480px) {
+    #formArea{
+        margin-top: 7px;
+        border-radius: 5px;
+        width: 94%;
+        margin-left: 3%;
+    }
+
+    .keywordTitle{
+        margin-left: 0%;
+    }
+    
+    .keywordForm{
+        margin-left: 0%;
+    }
+
+    #keywordErrorInfo{
+        margin-left: 0%;
+    }
+
+    .keywordInput{
+        width: 100%;
+    }
+
+    .distanceInput{
+        width: 100%;
+        margin-left: 0%;
+    }
+    
+    #keywordInputError{
+        width: 100%;
+    }
+
+    #categoryDropdown{
+        width: 100%;
+        display: block;
+        margin-left: 0%;
+    }
+
+    #distanceUnitDropdown{
+        width: 100%;
+        display: block;
+    }
+
+    .radioFirst{
+        display: block;
+        margin-left: 0%;
+    }
+
+    .radioSecond{
+        margin-left: 0%;
+    }
+
+    .locationInput{
+        margin-left: 0%;
+        width: 100%;
+    }
+}

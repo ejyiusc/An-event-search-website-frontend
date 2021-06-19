@@ -11,39 +11,37 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     
-    <div [@rightState]="state" (click)="changeState()">test animation</div>
-    <div class="square" (click)="changeState()" *ngIf="show">block</div>
       <!--. Form area -->
-      <div style="background-color: rgb(218, 218, 218);">
-        <h3 style="font-weight: 500;">Entertainment Event Ticket Search</h3>
+      <div id="formArea" style="background-color: rgb(218, 218, 218);">
+        <h3 style="font-weight: 500; font-size: 20px;" align="center">Entertainment Event Ticket Search</h3>
         <div>
-          <p style="display: inline;">Keyword<span style="color:red;">* </span></p>
-          <form class="example-form" style="display: inline;">
+          <p class="keywordTitle">Keyword<span style="color:red;">* </span></p>
+          <form class="example-form" class="keywordForm">
             <!-- Initial display part -->
-            <input type="text" class="form-control"
+            <input type="text" class="form-control keywordInput"
               *ngIf="keywordInvalid == false"
               placeholder="Enter Artist, Team or Event Name (eg. Lakers)"
               aria-label="Number"
               matInput
               [formControl]="keywordControl"
               [matAutocomplete]="auto"
-              style="display: inline; width: 300px"
               (blur)="checkForm()"
               autofocus>
 
               <!-- When input keyword is invalid, display this part -->
               <input type="text"
+              id="keywordInputError"
               *ngIf="keywordInvalid == true"
               placeholder="Enter Artist, Team or Event Name (eg. Lakers)"
               aria-label="Number"
               matInput
               [formControl]="keywordControl"
               [matAutocomplete]="auto"
-              style="display: inline; width: 300px; border: 3px solid red;"
+              style="border: 3px solid red;"
               autofocus>
 
               <!-- Error message -->
-              <div *ngIf="keywordInvalid == true" style="color: red;">Please enter a keyword</div>
+              <div id="keywordErrorInfo" *ngIf="keywordInvalid == true" style="color: red;">Please enter a keyword</div>
 
               <!-- Autocomplete -->
               <mat-autocomplete #auto="matAutocomplete">
@@ -55,23 +53,25 @@
         </div>
         <br>
 
-        <div ngbDropdown style="display: inline;">
-          <p style="display: inline;">Category</p>
-          <select name="" id="category" class="form-control" style="width: 150px; display: inline;" data-first-option="true" [(ngModel)]="formInfo.category">
-        　　<option value="" class="">All</option>
-            <option value="Music">Music</option>
-            <option value="Sports">Sports</option>
-            <option value="ArtsTheatre">Arts & Theatre</option>
-            <option value="Films">Films</option>
-            <option value="Miscellaneous">Miscellaneous</option>
-          </select>
+        <div ngbDropdown>
+          <p class="keywordTitle">Category</p>
+          <!-- <div > -->
+            <select name="" id="categoryDropdown" class="form-control" data-first-option="true" [(ngModel)]="formInfo.category">
+          　　<option value="" class="">All</option>
+              <option value="Music">Music</option>
+              <option value="Sports">Sports</option>
+              <option value="ArtsTheatre">Arts & Theatre</option>
+              <option value="Films">Films</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+          <!-- </div> -->
         </div>
         <br>
 
-        <div ngbDropdown style="display: inline;">
-          <p style="display: inline;">Distance</p>
-          <input type="number" class="form-control" [(ngModel)]="formInfo.distance" placeholder="10" style="display: inline; width: 100px">
-          <select id="category" class="form-control" style="width: 100px; display: inline;" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
+        <div ngbDropdown>
+          <p class="keywordTitle">Distance</p>
+          <input type="number" class="form-control distanceInput" [(ngModel)]="formInfo.distance" placeholder="10">
+          <select id="distanceUnitDropdown" class="form-control" data-first-option="true" [(ngModel)]="formInfo.distanceUnit">
         　　<option value="">Miles</option>
             <option value="km">Kilometers</option>
           </select>   
@@ -79,24 +79,25 @@
         <br>
 
         <div>
-          <p style="display: inline;">From<span style="color:red;">* </span></p>
-          <div style="display: inline;">
-          <label class="radio-inline">
-            <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
-          </label>
-          <br>
-          <label class="radio-inline">
-            <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
-          </label>
-          <br>
-          <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control" [(ngModel)]="formInfo.fromLocation" style="display: inline; width: 300px" disabled>
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()" style="display: inline; width: 300px" autofocus>
-          <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()" style="display: inline; width: 300px; border: 3px solid red;" autofocus>
-          <div *ngIf="formInfo.from == 'Other' && locationInvalid == true" style="color: red;">Please enter a location</div>
+          <p class="keywordTitle">From<span style="color:red;">* </span></p>
+            <!-- <div> -->
+            <label class="radio-inline radioFirst">
+              <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios3" [(ngModel)]="formInfo.from" value="Here"> Current location
+            </label>
+            <br>
+            <label class="radio-inline radioSecond">
+              <input type="radio" class="radio" name="optionsRadiosinline" id="optionsRadios4" [(ngModel)]="formInfo.from" value="Other"> Other. Please specify
+            </label>
+            <br>
+            <div class="locationInput">
+              <input type="text" *ngIf="formInfo.from == 'Here'" class="form-control" [(ngModel)]="formInfo.fromLocation" disabled>
+              <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == false" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()">
+              <input type="text" *ngIf="formInfo.from == 'Other' && locationInvalid == true" class="form-control" [(ngModel)]="formInfo.fromLocation" (blur)="checkForm()" style="border: 3px solid red;" autofocus>
+              <div *ngIf="formInfo.from == 'Other' && locationInvalid == true" style="color: red;">Please enter a location</div>
+            </div>
         </div>
-      </div>
         
-        <div>
+        <div class="keywordTitle">
           <button type="button" *ngIf="getCurrentLocation == false" class="btn btn-primary btn-sm" (click)="doSubmit()" disabled>
             <span class="glyphicon glyphicon-search"></span> Search
           </button>
@@ -115,6 +116,7 @@
       </button>
 
       <!-- Result/Favorite tab -->
+      <div style="margin-left: 40%;">
       <ul ngbNav #nav="ngbNav" [(activeId)]="ResultsFavorites" class="nav nav-pills">
         <li [ngbNavItem]="1">
           <a ngbNavLink (click)="clickResult()">Results</a>
@@ -123,6 +125,7 @@
           <a ngbNavLink (click)="getFavorite()">Favorites</a>
         </li>
       </ul>
+      </div>
 
       <!-- Progress bar -->
       <div *ngIf="showProgressBarSearchingEvents == true">
