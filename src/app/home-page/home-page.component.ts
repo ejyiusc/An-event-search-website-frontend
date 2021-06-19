@@ -36,12 +36,10 @@ import { MymodalComponent } from './mymodal/mymodal.component';
       state('false', style({  // show
           position:'relative', 
           left: '0%',
-          backgroundColor: '#eee',
       })),
       state('true', style({   // hidden
           position:'relative', 
           left: '120%',
-          backgroundColor: '#eee',
       })),
       transition('false => true', [  // show -> hidden
              animate('0.5s', keyframes([
@@ -511,6 +509,7 @@ export class HomePageComponent implements OnInit {
     this.detailContent['Name'] = eventsContent.name
 
     var ArtistTeam = ''
+    this.detailContent.ArtistTeamList = []
     if(eventsContent.hasOwnProperty('_embedded') && 
         eventsContent._embedded.hasOwnProperty('attractions')){
       for(var i = 0; i < eventsContent._embedded.attractions.length; ++i){
@@ -521,6 +520,8 @@ export class HomePageComponent implements OnInit {
         }
       }
     }
+    console.log("this.detailContent.ArtistTeamList", this.detailContent.ArtistTeamList)
+
     if(ArtistTeam != ''){
       this.detailContent['ArtistTeam'] = ArtistTeam
     }
@@ -617,19 +618,19 @@ export class HomePageComponent implements OnInit {
 
     // Request backend to call Spotify api
     var searchVenueDetailsBackendUrl = "https://nodejs-9991.wl.r.appspot.com/spotify?"
-    for(var i = 1; i < this.detailContent.ArtistTeamList.length; ++i){
+    this.spotifyArtistList = []
+    for(var i = 0; i < this.detailContent.ArtistTeamList.length; ++i){
       var searchArtistUrl = searchVenueDetailsBackendUrl + "artist=" + this.detailContent.ArtistTeamList[i]
       fetch(searchArtistUrl)
       .then(response => response.json())
       .then(response => {
         console.log("spotify: ", response)
-
         // progress bar
         this.progress = 70
 
         this.spotifyArtistList.push(response)
         console.log("this.spotifyArtistList: ", this.spotifyArtistList)
-        if(this.spotifyArtistList.length == this.detailContent.ArtistTeamList.length-1){
+        if(this.spotifyArtistList.length == this.detailContent.ArtistTeamList.length){
           console.log("artist complete", this.spotifyArtistList)
           this.dealArtistData()
         }
@@ -647,8 +648,9 @@ export class HomePageComponent implements OnInit {
   }
   
   dealArtistData(){
+    console.log("deal artist data func")
     var artistContent:any = []
-    this.detailContent.ArtistTeamList.splice(0, 1)
+    // this.detailContent.ArtistTeamList.splice(0, 1)
     for(var i = 0; i < this.spotifyArtistList.length; ++i){
       if(this.spotifyArtistList[i].hasOwnProperty('artists') && this.spotifyArtistList[i].artists.hasOwnProperty('items')){
         for(var j = 0; j < this.spotifyArtistList[i].artists.items.length; ++j){
