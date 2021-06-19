@@ -231,28 +231,30 @@ export class HomePageComponent implements OnInit {
     if(this.formInfo.keyword == null || this.formInfo.keyword ==''){
       this.keywordInvalid = true;
     }
-    for(let char of this.formInfo.keyword){
-      if(char != ' '){
-        break
+    else{
+      for(let char of this.formInfo.keyword){
+        if(char != ' '){
+          break
+        }
+        this.keywordInvalid = true;
       }
-      this.keywordInvalid = true;
     }
+
     console.log("this.formInfo.from", this.formInfo.from)
-    if(this.formInfo.from == 'Here'){
-      this.formInfo.fromLocation == ''
-    }
 
     if(this.formInfo.from == 'Other'){
       if(this.formInfo.fromLocation == ''){
         // Invalid location input when choose other
         this.locationInvalid = true;
       }
-      for(let char of this.formInfo.fromLocation){
-        if(char != ' '){
-          break
+      else{
+        for(let char of this.formInfo.fromLocation){
+          if(char != ' '){
+            break
+          }
+          this.locationInvalid = true;
         }
-        this.locationInvalid = true;
-      }      
+      }    
     }
   }
 
