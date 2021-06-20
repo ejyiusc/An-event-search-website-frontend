@@ -138,6 +138,8 @@ export class HomePageComponent implements OnInit {
   lat = 40
   lng = 74
 
+  serviceError = false
+
   // display flags
   // events table
   public noEvents:boolean = false
@@ -203,6 +205,8 @@ export class HomePageComponent implements OnInit {
     this.formInfo.distanceUnit = ''
     this.formInfo.from = 'Here'
     this.formInfo.fromLocation = ''
+
+    this.serviceError = false
 
     this.keywordInvalid = false
     this.locationInvalid = false
@@ -424,6 +428,10 @@ export class HomePageComponent implements OnInit {
         }
       }
     })
+    .catch((err) =>{
+      console.error('error occurs',err);// server error
+      this.serviceError = true
+     })
   }
 
   getDetails(index:number){

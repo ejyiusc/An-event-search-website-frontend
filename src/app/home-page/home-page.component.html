@@ -134,6 +134,12 @@
         <p><ngb-progressbar type="info" [value]="progress" [striped]="true"></ngb-progressbar></p>
       </div>
 
+      <div *ngIf="serviceError == true">
+        <div class="alert alert-danger" role="alert">
+          Failed to get search results.
+        </div>
+      </div>
+
       <div>
         <!-- Favorite -->
         <div [@rightState]="favoriteAnimation">
