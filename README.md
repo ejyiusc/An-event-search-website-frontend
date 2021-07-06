@@ -1,7 +1,6 @@
-localhost:4200
-npm i @types/googlemaps@3.39.13 --save-dev
 
-# MyApp
+# CSCI 571 Courseworks (Summer 2021) 
+# hw8 front-end
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.3.
 
